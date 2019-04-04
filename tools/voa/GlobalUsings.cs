@@ -1,0 +1,1 @@
+global using CompilationUnit = Std.Data.Text.Valkyrie.AST.ProgramRoot;

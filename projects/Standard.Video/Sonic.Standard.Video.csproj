@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>false</ImplicitUsings>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <PackageId>Sonic.Standard.Video</PackageId>
+        <RootNamespace>Std.Video</RootNamespace>
+        <Description>Sonic video sub-domain: temporal processing, vision, filter graph, A/V sync, format facade, extension host.</Description>
+        <Authors>Sonic Team</Authors>
+        <Company>Sonic</Company>
+        <Product>Sonic</Product>
+        <PackageTags>sonic;video;processing;vision;filter;codec;sync</PackageTags>
+        <IsPackable>true</IsPackable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageOutputPath>..\..\packages</PackageOutputPath>
+        <PackageReadmeFile>readme.md</PackageReadmeFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="readme.md" Pack="true" PackagePath=""/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Sonic.Core\Sonic.Core.csproj"/>
+        <ProjectReference Include="..\Sonic.Standard\Sonic.Standard.csproj"/>
+        <ProjectReference Include="..\Sonic.Standard.Image\Sonic.Standard.Image.csproj"/>
+        <ProjectReference Include="..\Sonic.Standard.Audio\Sonic.Standard.Audio.csproj"/>
+        <ProjectReference Include="..\Standard.Data.Binary\Standard.Data.Binary.csproj" />
+    </ItemGroup>
+</Project>

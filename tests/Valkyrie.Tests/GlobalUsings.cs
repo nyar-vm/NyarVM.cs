@@ -1,0 +1,21 @@
+global using Std.Data.Text.Diagnostics;
+global using Nyar.Language.Valkyrie;
+global using Std.Data.Text.Valkyrie.AST;
+global using Std.Data.Text.Valkyrie.AST.Declaration;
+global using Std.Data.Text.Valkyrie.AST.ECS;
+global using Std.Data.Text.Valkyrie.AST.Shader;
+global using Std.Data.Text.Valkyrie.AST.Statement;
+global using Std.Data.Text.Valkyrie.AST.Term;
+global using Std.Data.Text.Valkyrie.AST.Type;
+global using Std.Data.Text.Valkyrie.AST.Widget;
+global using Std.Data.Text.Valkyrie.Lexer;
+global using Std.Data.Text.Valkyrie.Parser;
+global using TypeCheckResult = Nyar.Language.Valkyrie.TypeChecker.TypeCheckResult;
+global using Xunit;
+global using CompilationUnit = Std.Data.Text.Valkyrie.AST.ProgramRoot; // 消歧义，Oak 和 Nyar 都有这个类名
+global using ComponentDeclaration = Std.Data.Text.Valkyrie.AST.ECS.DeclareComponent;
+global using SystemDeclaration = Std.Data.Text.Valkyrie.AST.ECS.DeclareSystem;
+global using WidgetDecl = Std.Data.Text.Valkyrie.AST.Widget.DeclareWidget;
+global using UsingDeclaration = Std.Data.Text.Valkyrie.AST.Declaration.DeclareUsing;
+global using MicroDeclaration = Std.Data.Text.Valkyrie.AST.Declaration.DeclareMicro;
+global using LetDeclaration = Std.Data.Text.Valkyrie.AST.Declaration.DeclareLet;

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <RootNamespace>Std.Template.Jinja</RootNamespace>
+        <AssemblyName>Sonic.Standard.Template.Jinja</AssemblyName>
+        <PackageId>Sonic.Standard.Template.Jinja</PackageId>
+        <Version>0.1.0</Version>
+        <Authors>NyarVM</Authors>
+        <Description>Jinja2 模板引擎实现</Description>
+        <PackageProjectUrl>https://github.com/nyar-vm/NyarVM</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/nyar-vm/NyarVM</RepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageTags>template;jinja</PackageTags>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Sonic.Standard.Template.csproj"/>
+    </ItemGroup>
+</Project>

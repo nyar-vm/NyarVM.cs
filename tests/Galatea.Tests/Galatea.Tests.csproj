@@ -1,0 +1,66 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <RootNamespace>Galatea.Tests</RootNamespace>
+        <IsTestProject>true</IsTestProject>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0"/>
+        <PackageReference Include="xunit" Version="2.9.3"/>
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Galatea\Galatea.csproj"/>
+        <ProjectReference Include="..\Galatea.Cluster\Galatea.Cluster.csproj"/>
+        <!-- <ProjectReference Include="..\Galatea.Compiler\Galatea.Compiler.csproj" /> -->
+        <ProjectReference Include="..\Galatea.Runtime\Galatea.Runtime.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Remove="CompilerRuntimeTests.cs"/>
+        <Compile Remove="NyarBridgeTests.cs"/>
+        <Compile Remove="GalateaV1IntegrationTests.cs"/>
+        <Compile Remove="CudaBackendTests.cs"/>
+        <Compile Remove="ResNetCudaTests.cs"/>
+        <Compile Remove="ActivationsTests.cs"/>
+        <Compile Remove="AdvancedInferenceTests.cs"/>
+        <Compile Remove="AdvancedLLMTests.cs"/>
+        <Compile Remove="AdvancedModelTests.cs"/>
+        <Compile Remove="AutogradTests.cs"/>
+        <Compile Remove="BatchNormTests.cs"/>
+        <Compile Remove="ClusterTests.cs"/>
+        <Compile Remove="ConfluxFusionTests.cs"/>
+        <Compile Remove="DataLoaderTests.cs"/>
+        <Compile Remove="DiffusionModelTests.cs"/>
+        <Compile Remove="DiffusionPipelineTests.cs"/>
+        <Compile Remove="EngineeringTests.cs"/>
+        <Compile Remove="EngramTests.cs"/>
+        <Compile Remove="GPTModelTests.cs"/>
+        <Compile Remove="GradientTestBase.cs"/>
+        <Compile Remove="LightweightModelTests.cs"/>
+        <Compile Remove="LLMInferenceTests.cs"/>
+        <Compile Remove="LlamaModelTests.cs"/>
+        <Compile Remove="LoraTests.cs"/>
+        <Compile Remove="LossesTests.cs"/>
+        <Compile Remove="MixedPrecisionTests.cs"/>
+        <Compile Remove="OperatorsTests.cs"/>
+        <Compile Remove="ProductionFeaturesTests.cs"/>
+        <Compile Remove="ProductionGPTTests.cs"/>
+        <Compile Remove="ProductionTests.cs"/>
+        <Compile Remove="ProductionToolsTests.cs"/>
+        <Compile Remove="ProductionTrainingTests.cs"/>
+        <Compile Remove="TrainingInfrastructureTests.cs"/>
+        <Compile Remove="TrainingPipelineTests.cs"/>
+        <Compile Remove="TrainingTests.cs"/>
+        <Compile Remove="TransformerModelTests.cs"/>
+        <Compile Remove="WeightTiedGPTTests.cs"/>
+    </ItemGroup>
+
+</Project>

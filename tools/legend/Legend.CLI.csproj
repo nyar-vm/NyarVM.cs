@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <OutputType>Exe</OutputType>
+        <AssemblyName>legend</AssemblyName>
+        <RootNamespace>Legend.CLI</RootNamespace>
+        <Description>Legend 多语言统一运行时 CLI</Description>
+        <Version>0.1.0</Version>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\projects\Nyar.VM.LegacyVM\LegacyVM.csproj"/>
+        <ProjectReference Include="..\..\projects\Sonic.Standard.Command\Sonic.Standard.Command.csproj"/>
+    </ItemGroup>
+
+</Project>

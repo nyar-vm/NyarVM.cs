@@ -1,0 +1,92 @@
+<% extends 'layouts/default.dora' %>
+<% block content %>
+<div class="search-page">
+    <h2><% page.title %></h2>
+    <div class="search-box">
+        <input type="text" id="searchInput" class="search-input" placeholder="输入关键词搜索文章..." autocomplete="off">
+        <button id="searchBtn" class="search-btn">搜索</button>
+    </div>
+    <div id="searchResults" class="search-results"></div>
+    <div id="noResults" class="no-results">没有找到文章</div>
+</div>
+
+<script>
+(function() {
+    var searchData = [];
+    var searchInput = document.getElementById('searchInput');
+    var searchBtn = document.getElementById('searchBtn');
+    var resultsDiv = document.getElementById('searchResults');
+    var noResultsDiv = document.getElementById('noResults');
+
+    function fetchIndex() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/search-index.json', true);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                searchData = JSON.parse(xhr.responseText);
+            }
+        };
+        xhr.send();
+    }
+
+    function doSearch() {
+        var query = searchInput.value.trim().toLowerCase();
+        if (!query || !searchData.length) {
+            resultsDiv.innerHTML = '';
+            noResultsDiv.style.display = 'none';
+            return;
+        }
+
+        var keywords = query.split(/\s+/).filter(function(k) { return k.length > 0; });
+
+        var matches = searchData.filter(function(item) {
+            var title = (item.title || '').toLowerCase();
+            var content = (item.content || '').toLowerCase();
+            var date = (item.date || '').toLowerCase();
+            var text = title + ' ' + content + ' ' + date;
+
+            return keywords.every(function(kw) {
+                return text.indexOf(kw) !== -1;
+            });
+        });
+
+        if (matches.length === 0) {
+            resultsDiv.innerHTML = '';
+            noResultsDiv.style.display = 'block';
+        }
+        else {
+            noResultsDiv.style.display = 'none';
+            var html = '';
+            matches.forEach(function(item) {
+                html += '<article>';
+                html += '<h3><a href="' + item.url + '">' + escapeHtml(item.title) + '</a></h3>';
+                if (item.date) {
+                    html += '<time>' + escapeHtml(item.date) + '</time>';
+                }
+                if (item.content) {
+                    html += '<p>' + escapeHtml(item.content) + '</p>';
+                }
+                html += '</article>';
+            });
+            resultsDiv.innerHTML = html;
+        }
+    }
+
+    function escapeHtml(text) {
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(text));
+        return div.innerHTML;
+    }
+
+    searchInput.addEventListener('input', doSearch);
+    searchBtn.addEventListener('click', doSearch);
+    searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            doSearch();
+        }
+    });
+
+    fetchIndex();
+})();
+</script>
+<% end block %>

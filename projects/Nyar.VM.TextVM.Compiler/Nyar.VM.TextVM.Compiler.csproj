@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <PackageId>Nyar.VM.TextVM.Compiler</PackageId>
+        <RootNamespace>Nyar.VM.TextVM.Compiler</RootNamespace>
+        <AssemblyName>Nyar.VM.TextVM.Compiler</AssemblyName>
+        <Authors>Nyar Team</Authors>
+        <Description>TextVM build-time compiler library - compiles regex patterns into .tvm bytecode</Description>
+        <PackageTags>nyar vm text regex compiler</PackageTags>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+</Project>

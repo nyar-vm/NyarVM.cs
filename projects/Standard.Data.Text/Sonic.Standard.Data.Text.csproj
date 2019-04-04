@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <RootNamespace>Std.Data.Text</RootNamespace>
+        <AssemblyName>Sonic.Standard.Data.Text</AssemblyName>
+        <PackageId>Sonic.Standard.Data.Text</PackageId>
+        <Authors>Nyar Team - Oak Group</Authors>
+        <Description>语言解析器</Description>
+        <PackageProjectUrl>https://github.com/nyar-vm/Oak.cs</PackageProjectUrl>
+        <PackageTags>parser;lexer;oak</PackageTags>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Sonic.Standard\Sonic.Standard.csproj"/>
+    </ItemGroup>
+
+  <!-- 排除引用未实现类型的文件；OA 重构中转换器暂不可用 -->
+  <ItemGroup>
+    <Compile Remove="OCaml\**\*.cs"/>
+    <Compile Remove="Verse\**\*.cs"/>
+    <Compile Remove="Vue\**\*.cs"/>
+    <Compile Remove="Brainfuck\**\*.cs"/>
+    <Compile Remove="C\**\*.cs"/>
+    <Compile Remove="CSharp\**\*.cs"/>
+    <Compile Remove="Erlang\**\*.cs"/>
+    <Compile Remove="Haskell\**\*.cs"/>
+    <Compile Remove="Hlsl\**\*.cs"/>
+    <Compile Remove="JavaScript\**\*.cs"/>
+    <Compile Remove="Julia\**\*.cs"/>
+    <Compile Remove="Prolog\**\*.cs"/>
+    <Compile Remove="Python\**\*.cs"/>
+    <Compile Remove="Regex\**\*.cs"/>
+    <Compile Remove="Rust\**\*.cs"/>
+    <Compile Remove="Typescript\**\*.cs"/>
+  </ItemGroup>
+</Project>

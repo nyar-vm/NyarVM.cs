@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>true</ImplicitUsings>
+        <DisableImplicitFrameworkReferences>false</DisableImplicitFrameworkReferences>
+        <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <PackageId>Sonic.Standard.Application.Client</PackageId>
+        <RootNamespace>Std.App.Client</RootNamespace>
+        <Description>std.app.client 客户端应用框架：提供构建 CLI/TUI/GUI/WebUI/HUD 客户端应用所需的统一抽象，通过 HostShell 适配不同运行环境</Description>
+        <Authors>Olympus Team</Authors>
+        <IsPackable>true</IsPackable>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    </PropertyGroup>
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.NETCore.App"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.0"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Sonic.Standard\Sonic.Standard.csproj"/>
+    </ItemGroup>
+</Project>

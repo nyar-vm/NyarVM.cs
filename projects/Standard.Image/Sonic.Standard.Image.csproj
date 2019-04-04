@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>false</ImplicitUsings>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <PackageId>Sonic.Standard.Image</PackageId>
+        <RootNamespace>Std.Image</RootNamespace>
+        <Description>Sonic image sub-domain: processing, static vision, format facade, extension host.</Description>
+        <Authors>Sonic Team</Authors>
+        <Company>Sonic</Company>
+        <Product>Sonic</Product>
+        <PackageTags>sonic;image;processing;vision;format;codec</PackageTags>
+        <IsPackable>true</IsPackable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageOutputPath>..\..\packages</PackageOutputPath>
+        <PackageReadmeFile>readme.md</PackageReadmeFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="readme.md" Pack="true" PackagePath=""/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Sonic.Core\Sonic.Core.csproj"/>
+        <ProjectReference Include="..\Sonic.Standard\Sonic.Standard.csproj"/>
+        <ProjectReference Include="..\Standard.Data.Binary\Standard.Data.Binary.csproj" />
+        <ProjectReference Include="..\Sonic.Standard.Data.Binary\Bmp\Nyar.Binary.Bmp.csproj"/>
+        <ProjectReference Include="..\Sonic.Standard.Data.Binary\Gif\Gif.csproj"/>
+        <ProjectReference Include="..\Sonic.Standard.Data.Binary\Png\Nyar.Binary.Png.csproj"/>
+    </ItemGroup>
+    <!-- 排除引用未实现类型（Std.Data.Binary.Png.Encode）的文件 -->
+    <ItemGroup>
+        <Compile Remove="ImageIO.cs"/>
+    </ItemGroup>
+</Project>

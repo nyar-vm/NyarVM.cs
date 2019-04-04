@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>false</ImplicitUsings>
+        <DisableImplicitFrameworkReferences>false</DisableImplicitFrameworkReferences>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <PackageId>Sonic.Animator</PackageId>
+        <RootNamespace>Animator</RootNamespace>
+        <Description>Sonic enterprise-grade 2D animation library.</Description>
+        <IsPackable>true</IsPackable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageOutputPath>..\..\packages</PackageOutputPath>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Sonic.Standard\Sonic.Standard.csproj"/>
+        <ProjectReference Include="..\Sonic.Plotter\Sonic.Plotter.csproj"/>
+    </ItemGroup>
+</Project>

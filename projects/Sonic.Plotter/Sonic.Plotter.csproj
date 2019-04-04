@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>false</ImplicitUsings>
+        <DisableImplicitFrameworkReferences>false</DisableImplicitFrameworkReferences>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <PackageId>Sonic.Plotter</PackageId>
+        <RootNamespace>Plotter</RootNamespace>
+        <Description>Sonic enterprise-grade 2D data visualization library.</Description>
+        <Authors>Sonic Team</Authors>
+        <Company>Sonic</Company>
+        <Product>Sonic.Plotter</Product>
+        <PackageTags>sonic;plotter;chart;visualization;grammar-of-graphics</PackageTags>
+        <IsPackable>true</IsPackable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageOutputPath>..\..\packages</PackageOutputPath>
+        <PackageReadmeFile>readme.md</PackageReadmeFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="readme.md" Pack="true" PackagePath=""/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="System.Drawing.Common" Version="9.0.0"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Sonic.Standard\Sonic.Standard.csproj"/>
+        <ProjectReference Include="..\Sonic.Core\Sonic.Core.csproj"/>
+    </ItemGroup>
+    <!-- 排除引用未实现类型（IChart/ICanvas/Grammar）的文件 -->
+    <ItemGroup>
+        <Compile Remove="Core\ChartCanvas.cs"/>
+        <Compile Remove="Grammar\**\*.cs"/>
+        <Compile Remove="Interaction\InteractionBuilder.cs"/>
+        <Compile Remove="Schema\**\*.cs"/>
+        <Compile Remove="Animation\AnimationBuilder.cs"/>
+        <Compile Remove="Extensions\AnnotationBuilder.cs"/>
+        <Compile Remove="Extensions\ThemeBuilder.cs"/>
+    </ItemGroup>
+</Project>

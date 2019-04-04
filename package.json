@@ -1,0 +1,13 @@
+{
+    "private": true,
+    "scripts": {
+        "p": "node scripts/publish-nuget.mjs",
+        "build": "pnpm -r build",
+        "test": "pnpm -r test",
+        "clean": "pnpm -r clean",
+        "format": "biome format . --write",
+        "fmt": "biome format . --write",
+        "lint": "biome lint .",
+        "check": "biome check ."
+    }
+}

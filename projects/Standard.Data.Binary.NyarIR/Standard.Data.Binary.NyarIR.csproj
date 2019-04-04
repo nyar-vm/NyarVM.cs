@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <RootNamespace>Std.Data.Binary.NyarIR</RootNamespace>
+        <Description>NyarIR 二进制模型与编解码项目。</Description>
+        <PackageId>Standard.Data.Binary.NyarIR</PackageId>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Standard.Data.Binary\Standard.Data.Binary.csproj"/>
+    </ItemGroup>
+</Project>

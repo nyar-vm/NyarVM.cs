@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <RootNamespace>Nyar.Language.Scss</RootNamespace>
+        <AssemblyName>Nyar.Language.Scss</AssemblyName>
+        <Authors>Nyar Team</Authors>
+        <Description>SCSS 预处理器 — 变量、Mixin、嵌套规则等 SCSS 特性支持</Description>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Css\Css.csproj"/>
+    </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="ScssStylesheet.cs"/>
+    <Compile Remove="ScssMixin.cs"/>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>true</ImplicitUsings>
+        <DisableImplicitFrameworkReferences>false</DisableImplicitFrameworkReferences>
+        <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <PackageId>Sonic.Standard.Terminal</PackageId>
+        <RootNamespace>Std.Terminal</RootNamespace>
+        <AssemblyName>Sonic.Standard.Terminal</AssemblyName>
+        <Description>Sonic 终端 UI 子系统：帧缓冲差分渲染引擎、Flex 布局系统、28+ 交互控件库、双轨主题系统</Description>
+        <Authors>Sonic Team</Authors>
+        <IsPackable>true</IsPackable>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    </PropertyGroup>
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.NETCore.App"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Sonic.Core\Sonic.Core.csproj"/>
+        <ProjectReference Include="..\Sonic.Standard\Sonic.Standard.csproj"/>
+        <ProjectReference Include="..\Sonic.Standard.Command\Sonic.Standard.Command.csproj"/>
+    </ItemGroup>
+</Project>

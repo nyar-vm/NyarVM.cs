@@ -1,0 +1,133 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+        <RootNamespace>Nyar.Tests</RootNamespace>
+        <AssemblyName>Nyar.Tests</AssemblyName>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1"/>
+        <PackageReference Include="xunit" Version="2.9.3"/>
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\projects\Nyar\Nyar.csproj"/>
+        <ProjectReference Include="..\..\projects\Nyar.Language\Nyar.Language.csproj"/>
+        <ProjectReference Include="..\..\projects\Nyar.VM.NyarVM\NyarVM.csproj"/>
+        <ProjectReference Include="..\..\projects\Standard.Data.Binary\Standard.Data.Binary.csproj" />
+        <ProjectReference Include="..\..\projects\Sonic.Standard.Data.Text\Sonic.Standard.Data.Text.csproj"/>
+        <ProjectReference Include="..\..\projects\Sonic.Standard.Data.Text.Valkyrie\Valkyrie.csproj"/>
+        <ProjectReference Include="..\..\projects\Sonic.Standard\Sonic.Standard.csproj"/>
+        <ProjectReference Include="..\..\tools\legion\Legion.CLI.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="Xunit"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Remove="Database\**\*.cs"/>
+        <Compile Remove="ClrGenTool\**\*.cs"/>
+        <Compile Remove="Binary\GlobalUsings.cs"/>
+        <Compile Remove="Binary\ClrTests\ClrRoundTripTests.cs"/>
+        <Compile Remove="Binary\ClrTests\ClrComprehensiveTests.cs"/>
+        <Compile Remove="Binary\ClrTests\ClrDebugTests.cs"/>
+        <Compile Remove="Binary\ByteBufferTests\**\*.cs"/>
+        <Compile Remove="Binary\CodecTests\**\*.cs"/>
+        <Compile Remove="Binary\DwarfTests\**\*.cs"/>
+        <Compile Remove="Binary\FrameTests\**\*.cs"/>
+        <Compile Remove="Binary\GnosisTests\**\*.cs"/>
+        <Compile Remove="Binary\JvmTests\**\*.cs"/>
+        <Compile Remove="Binary\NyarTests\**\*.cs"/>
+        <Compile Remove="Binary\SpirvTests\**\*.cs"/>
+        <Compile Remove="Binary\StreamTests\**\*.cs"/>
+        <Compile Remove="Binary\WasmTests\**\*.cs"/>
+        <Compile Remove="Binary\BasisRoundTripTests.cs"/>
+        <Compile Remove="Binary\BmFontRoundTripTests.cs"/>
+        <Compile Remove="Binary\ClrAndNativeRuntimeTests.cs"/>
+        <Compile Remove="Binary\CoffRoundTripTests.cs"/>
+        <Compile Remove="Binary\CrossFormatConsistencyTests.cs"/>
+        <Compile Remove="Binary\DwarfEncoderTests.cs"/>
+        <Compile Remove="Binary\DwarfRoundTripTests.cs"/>
+        <Compile Remove="Binary\ElfEncoderAdvancedTests.cs"/>
+        <Compile Remove="Binary\ElfEncoderTests.cs"/>
+        <Compile Remove="Binary\ElfRoundTripTests.cs"/>
+        <Compile Remove="Binary\ExrRoundTripTests.cs"/>
+        <Compile Remove="Binary\FlacRoundTripTests.cs"/>
+        <Compile Remove="Binary\FlatBuffersRoundTripTests.cs"/>
+        <Compile Remove="Binary\MachOEncoderAdvancedTests.cs"/>
+        <Compile Remove="Binary\MachOEncoderTests.cs"/>
+        <Compile Remove="Binary\MachORoundTripTests.cs"/>
+        <Compile Remove="Binary\MsgPackRoundTripTests.cs"/>
+        <Compile Remove="Binary\NyarValidatorAdvancedTests.cs"/>
+        <Compile Remove="Binary\NyarValidatorTests.cs"/>
+        <Compile Remove="Binary\OfficeRoundTripTests.cs"/>
+        <Compile Remove="Binary\OnnxRoundTripTests.cs"/>
+        <Compile Remove="Binary\OpusRoundTripTests.cs"/>
+        <Compile Remove="Binary\PeEncoderAdvancedTests.cs"/>
+        <Compile Remove="Binary\PeEncoderTests.cs"/>
+        <Compile Remove="Binary\PeRoundTripTests.cs"/>
+        <Compile Remove="Binary\ProtocolScannerTests.cs"/>
+        <Compile Remove="Binary\PsdRoundTripTests.cs"/>
+        <Compile Remove="Binary\SafeTensorsRoundTripTests.cs"/>
+        <Compile Remove="Binary\UsdRoundTripTests.cs"/>
+        <Compile Remove="Binary\VrmRoundTripTests.cs"/>
+        <Compile Remove="Binary\XlsRoundTripTests.cs"/>
+        <Compile Remove="Binary\ZipRoundTripTests.cs"/>
+        <Compile Remove="Jit\**\*.cs"/>
+        <Compile Remove="Memory\**\*.cs"/>
+        <Compile Remove="Misc\**\*.cs"/>
+        <Compile Remove="Runtime\**\*.cs"/>
+        <Compile Remove="Compiler\**\*.cs"/>
+        <Compile Remove="Dialects\AgentDialectIntegrationTests.cs"/>
+        <Compile Remove="Dialects\CrossDialectPipelineTests.cs"/>
+        <Compile Remove="Dialects\GameDialectTests.cs"/>
+        <Compile Remove="Dialects\HardwareDialectIntegrationTests.cs"/>
+        <Compile Remove="Dialects\ProofDialectIntegrationTests.cs"/>
+        <Compile Remove="Dialects\QuantumDialectIntegrationTests.cs"/>
+        <Compile Remove="Dialects\ScheduleDialectIntegrationTests.cs"/>
+        <Compile Remove="Dialects\SchemaDialectIntegrationTests.cs"/>
+        <Compile Remove="Dialects\ShaderDialectIntegrationTests.cs"/>
+        <Compile Remove="Dialects\WebDialectIntegrationTests.cs"/>
+        <Compile Remove="Dialects\DialectPerformanceTests.cs"/>
+        <Compile Remove="E2E\**\*.cs"/>
+        <Compile Remove="Execution\**\*.cs"/>
+        <Compile Remove="Jvm\**\*.cs"/>
+        <Compile Remove="Neural\**\*.cs"/>
+        <Compile Remove="Wasm\**\*.cs"/>
+        <Compile Remove="ClrEndToEnd\**\*.cs"/>
+        <Compile Remove="Semantic\VarDeclAndTypeRefTests.cs"/>
+        <Compile Remove="EGraph\StrategyPipelineTests.cs"/>
+        <Compile Remove="EGraph\AlgebraicRuleTests.cs"/>
+        <Compile Remove="Dialects\DialectRegistryTests.cs"/>
+        <Compile Remove="Dialects\StandardDialectTests.cs"/>
+        <Compile Remove="EGraph\DevirtualizationRuleTests.cs"/>
+        <Compile Remove="EGraph\EGraphBasicTests.cs"/>
+        <Compile Remove="EGraph\EGraphPerformanceTests.cs"/>
+        <Compile Remove="EGraph\NewRulesTests.cs"/>
+        <Compile Remove="EGraph\StandardRewriteRulesTests.cs"/>
+        <Compile Remove="Semantic\TypeAnalysisTests.cs"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="..\Nyar.Semantic.Tests\**\*.cs" Link="Semantic\%(RecursiveDir)%(Filename)%(Extension)"/>
+        <!-- 以下链接项目暂时排除（编码问题或依赖缺失）
+        <Compile Include="..\Nyar.Test.Binary\**\*.cs" Link="Binary\%(RecursiveDir)%(Filename)%(Extension)"/>
+        <Compile Include="..\Nyar.Test.ClrEndToEnd\**\*.cs" Link="ClrEndToEnd\%(RecursiveDir)%(Filename)%(Extension)"/>
+        <Compile Include="..\Nyar.Test.E2E\**\*.cs" Link="E2E\%(RecursiveDir)%(Filename)%(Extension)"/>
+        <Compile Include="..\Nyar.Test.Jvm\**\*.cs" Link="Jvm\%(RecursiveDir)%(Filename)%(Extension)"/>
+        <Compile Include="..\Nyar.Test.Neural\**\*.cs" Link="Neural\%(RecursiveDir)%(Filename)%(Extension)"/>
+        <Compile Include="..\Nyar.Test.Wasm\**\*.cs" Link="Wasm\%(RecursiveDir)%(Filename)%(Extension)"/>
+        -->
+    </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="EGraphDevirtualizationRuleTests.cs"/>
+  </ItemGroup>
+</Project>

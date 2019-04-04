@@ -1,0 +1,13 @@
+<% extends 'layouts/default.dora' %>
+<% block content %>
+<h2><% page.title %></h2>
+<div class="posts">
+<% loop posts %>
+    <article>
+        <h3><a href="<% item.url %>"><% item.title %></a></h3>
+        <p><% item.summary %></p>
+        <time><% item.date %></time>
+    </article>
+<% end loop %>
+</div>
+<% end block %>

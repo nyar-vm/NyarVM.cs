@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Nyar.Protocol.Protobuf</RootNamespace>
+    <AssemblyName>Nyar.Protocol.Protobuf</AssemblyName>
+        <Authors>nyar-vm</Authors>
+    <Description>Acorn Protobuf 格式库，提供 Protocol Buffers 消息的扫描、编码和解码功能</Description>
+    <PackageProjectUrl>https://github.com/nyar-vm/Acorn.cs</PackageProjectUrl>
+            <PackageReadmeFile>Readme.md</PackageReadmeFile>
+          <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sonic.Standard.Data.Binary.csproj" />
+      </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\Readme.md" Pack="true" PackagePath="" />
+      </ItemGroup>
+
+</Project>
+
+

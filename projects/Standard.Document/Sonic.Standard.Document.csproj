@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <RootNamespace>Std.Document</RootNamespace>
+        <AssemblyName>Sonic.Standard.Document</AssemblyName>
+        <PackageId>Sonic.Standard.Document</PackageId>
+        <Authors>Nyar Team - Argus Group</Authors>
+        <Description>Argus 全视文档工具集：解析、校验、转换、编排一体化底层库</Description>
+        <PackageProjectUrl>https://github.com/nyar-vm/NyarVM.cs</PackageProjectUrl>
+        <PackageTags>document;converter;pandoc;parser;formatter</PackageTags>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Standard.Data.Binary\Standard.Data.Binary.csproj" />
+        <ProjectReference Include="..\Sonic.Standard.Data.Text\Sonic.Standard.Data.Text.csproj"/>
+        <ProjectReference Include="..\Sonic.Standard\Sonic.Standard.csproj"/>
+    </ItemGroup>
+</Project>

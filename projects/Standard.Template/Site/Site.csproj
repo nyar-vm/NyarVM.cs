@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <RootNamespace>Std.Template.Site</RootNamespace>
+        <AssemblyName>Sonic.Standard.Template.Site</AssemblyName>
+        <PackageId>Sonic.Standard.Template.Site</PackageId>
+        <Version>0.1.0</Version>
+        <Authors>NyarVM</Authors>
+        <Description>静态站点生成器</Description>
+        <PackageProjectUrl>https://github.com/nyar-vm/DejavuEngine</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/nyar-vm/DejavuEngine</RepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageTags>template;site;ssg</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Dejavu\Dejavu.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="SkiaSharp" Version="3.116.1"/>
+    </ItemGroup>
+
+    <!-- 排除引用未实现类型（TocItem/SerdeValue/PageData/SiteConfig）的文件 -->
+    <ItemGroup>
+        <Compile Remove="SiteGenerator.cs"/>
+        <Compile Remove="PluginInterfaces.cs"/>
+        <Compile Remove="PluginManager.cs"/>
+    </ItemGroup>
+
+</Project>

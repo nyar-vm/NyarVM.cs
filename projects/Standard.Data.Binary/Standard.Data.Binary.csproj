@@ -1,0 +1,61 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <PackageId>Standard.Data.Binary</PackageId>
+        <RootNamespace>Std.Data.Binary</RootNamespace>
+        <Authors>nyar-vm</Authors>
+        <Description>Nyar Protocol Framework 基础库，提供有状态网络协议的抽象与工具</Description>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Sonic.Standard\Sonic.Standard.csproj"/>
+    </ItemGroup>
+    <!-- 排除有独立 csproj 的子目录，避免重复编译和 AssemblyInfo 冲突 -->
+    <ItemGroup>
+        <Compile Remove="Basis\**\*.cs"/>
+        <Compile Remove="BmFont\**\*.cs"/>
+        <Compile Remove="Bmp\**\*.cs"/>
+        <Compile Remove="Coff\**\*.cs"/>
+        <Compile Remove="Dds\**\*.cs"/>
+        <Compile Remove="Dwarf\**\*.cs"/>
+        <Compile Remove="Dxil\**\*.cs"/>
+        <Compile Remove="EPub\**\*.cs"/>
+        <Compile Remove="Exr\**\*.cs"/>
+        <Compile Remove="Fbx\**\*.cs"/>
+        <Compile Remove="Flac\**\*.cs"/>
+        <Compile Remove="FlatBuffers\**\*.cs"/>
+        <Compile Remove="Gif\**\*.cs"/>
+        <Compile Remove="Gltf\**\*.cs"/>
+        <Compile Remove="Hashing\**\*.cs"/>
+        <Compile Remove="Jpeg\**\*.cs"/>
+        <Compile Remove="Live2D\**\*.cs"/>
+        <Compile Remove="Llvm\**\*.cs"/>
+        <Compile Remove="LZ4\**\*.cs"/>
+        <Compile Remove="MessagePack\**\*.cs"/>
+        <Compile Remove="MySQL\**\*.cs"/>
+        <Compile Remove="Office\**\*.cs"/>
+        <Compile Remove="Ogg\**\*.cs"/>
+        <Compile Remove="Onnx\**\*.cs"/>
+        <Compile Remove="Opus\**\*.cs"/>
+        <Compile Remove="Png\**\*.cs"/>
+        <Compile Remove="PostgreSQL\**\*.cs"/>
+        <Compile Remove="Protobuf\**\*.cs"/>
+        <Compile Remove="Psd\**\*.cs"/>
+        <Compile Remove="Redis\**\*.cs"/>
+        <Compile Remove="SafeTensors\**\*.cs"/>
+        <Compile Remove="Spine\**\*.cs"/>
+        <Compile Remove="SpirV\**\*.cs"/>
+        <Compile Remove="Sqlite\**\*.cs"/>
+        <Compile Remove="Stream\**\*.cs"/>
+        <Compile Remove="Tga\**\*.cs"/>
+        <Compile Remove="Ttf\**\*.cs"/>
+        <Compile Remove="Usd\**\*.cs"/>
+        <Compile Remove="Vrm\**\*.cs"/>
+        <Compile Remove="Wav\**\*.cs"/>
+        <Compile Remove="ZeroMQ\**\*.cs"/>
+        <Compile Remove="Zip\**\*.cs"/>
+        <Compile Remove="Zstd\**\*.cs"/>
+    </ItemGroup>
+</Project>

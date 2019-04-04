@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+        <RootNamespace>LightDB.Tests</RootNamespace>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.*"/>
+        <PackageReference Include="xunit" Version="2.*"/>
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.*"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\projects\Sonic.Standard\Sonic.Standard.csproj"/>
+        <ProjectReference Include="..\..\projects\Sonic.SourceGenerator\Sonic.SourceGenerator.csproj"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false"/>
+    </ItemGroup>
+
+</Project>

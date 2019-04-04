@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RootNamespace>Hermes.Plugin.Sql</RootNamespace>
+    <AssemblyName>Hermes.Plugin.Sql</AssemblyName>
+    <PackageId>Hermes.Plugin.Sql</PackageId>
+        <Authors>NyarVM</Authors>
+    <Description>Hermes SQL 插件 — DDL/DML 生成 + 数据库执行 + Schema 迁移（全自研协议库）</Description>
+        <PackageTags>hermes;sql;ddl;dml;migration;plugin;code-generation;acorn</PackageTags>
+          <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+    <ItemGroup>
+    <ProjectReference Include="..\..\Sonic.Standard.Schema.csproj"/>
+    <ProjectReference Include="..\..\..\Nyar\Nyar.csproj"/>
+  </ItemGroup>
+</Project>

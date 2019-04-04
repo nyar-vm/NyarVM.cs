@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Nyar.Protocol.Redis</RootNamespace>
+    <AssemblyName>Nyar.Protocol.Redis</AssemblyName>
+        <Authors>nyar-vm</Authors>
+    <Description>Acorn Redis 协议库，提供 Redis 协议的扫描、编码和解码功能</Description>
+    <PackageProjectUrl>https://github.com/nyar-vm/Acorn.cs</PackageProjectUrl>
+            <PackageReadmeFile>Readme.md</PackageReadmeFile>
+          <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sonic.Standard.Data.Binary.csproj" />
+      </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\Readme.md" Pack="true" PackagePath="" />
+      </ItemGroup>
+
+</Project>
+
+

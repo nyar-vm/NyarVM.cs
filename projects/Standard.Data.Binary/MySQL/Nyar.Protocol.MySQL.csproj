@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Nyar.Protocol.MySQL</RootNamespace>
+    <AssemblyName>Nyar.Protocol.MySQL</AssemblyName>
+        <Authors>nyar-vm</Authors>
+    <Description>Acorn MySQL 协议库，提供 MySQL 协议的扫描、编码和解码功能</Description>
+    <PackageProjectUrl>https://github.com/nyar-vm/Acorn.cs</PackageProjectUrl>
+            <PackageReadmeFile>Readme.md</PackageReadmeFile>
+          <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sonic.Standard.Data.Binary.csproj" />
+    <ProjectReference Include="..\..\Nyar.SourceGenerator\Nyar.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+      </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\Readme.md" Pack="true" PackagePath="" />
+      </ItemGroup>
+
+</Project>
+
+

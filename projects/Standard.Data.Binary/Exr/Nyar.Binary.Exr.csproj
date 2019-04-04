@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RootNamespace>Nyar.Binary.Exr</RootNamespace>
+    <AssemblyName>Nyar.Binary.Exr</AssemblyName>
+    <PackageId>Nyar.Binary.Exr</PackageId>
+          <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sonic.Standard.Data.Binary.csproj" />
+    <ProjectReference Include="..\..\Nyar\Nyar.csproj" />
+  </ItemGroup>
+</Project>

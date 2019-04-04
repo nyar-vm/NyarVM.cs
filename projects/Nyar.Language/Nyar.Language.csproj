@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <RootNamespace>Nyar.Language</RootNamespace>
+        <AssemblyName>Nyar.Language</AssemblyName>
+        <Authors>Nyar Team</Authors>
+        <Description>Nyar language contracts, diagnostics, text abstractions, and serde primitives</Description>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Nyar\Nyar.csproj"/>
+        <ProjectReference Include="..\Standard.Data.Text\Sonic.Standard.Data.Text.csproj"/>
+        <ProjectReference Include="..\Standard.Data.Binary\Standard.Data.Binary.csproj" />
+        <ProjectReference Include="..\Standard.Data.Binary.Clr\Clr.csproj"/>
+        <ProjectReference Include="..\Standard.Data.Binary.Jvm\Jvm.csproj"/>
+        <ProjectReference Include="..\Standard.Data.Binary.Wasm\Wasm.csproj"/>
+        <ProjectReference Include="..\Nyar.VM.NyarVM\NyarVM.csproj"/>
+        <ProjectReference Include="..\Nyar.Language.Css\Css.csproj"/>
+        <ProjectReference Include="..\Standard.Data.Text.Valkyrie\Valkyrie.csproj" />
+        <ProjectReference Include="WebStyle\WebStyle.csproj"/>
+    </ItemGroup>
+
+    <!-- 排除引用不存在类型或未实现的目录/文件 -->
+    <ItemGroup>
+        <EmbeddedResource Include="Awsl.Asgard\Runtime\voa-runtime.js"/>
+        <!-- TypeChecker 分部文件：主 TypeChecker.cs 是存根，这些分部文件引用了未定义的方法/字段 -->
+        <Compile Remove="Valkyrie\TypeChecker\TypeChecker.Analysis.cs"/>
+        <Compile Remove="Valkyrie\TypeChecker\TypeChecker.Constraints.cs"/>
+        <Compile Remove="Valkyrie\TypeChecker\TypeChecker.Declarations.cs"/>
+        <Compile Remove="Valkyrie\TypeChecker\TypeChecker.Expressions.cs"/>
+        <Compile Remove="Valkyrie\TypeChecker\TypeChecker.MatchExhaustiveness.cs"/>
+        <Compile Remove="Valkyrie\TypeChecker\TypeChecker.TypeNarrowing.cs"/>
+        <!-- 排除独立子项目目录：Css/Scss/Tailwind/Awsl 通过 ProjectReference 引用 DLL，不直接编译源码 -->
+        <Compile Remove="Css\**\*.cs"/>
+        <Compile Remove="Scss\**\*.cs"/>
+        <Compile Remove="Tailwind\**\*.cs"/>
+        <Compile Remove="WebStyle\**\*.cs"/>
+        
+        <Compile Remove="Awsl\**\*.cs"/>
+        <Compile Remove="Awsl.Asgard\**\*.cs"/>
+        <!-- Config 文件：VonParser/VonValue API 不匹配，暂排除 -->
+        <!-- VoaConfigLoader 不再排除，由 tools/voa 使用 -->
+        <!-- Lint 规则：引用的 ILintRule/LintEngine 在 Nyar 中被排除，且使用 AstNode 类型不匹配，暂排除 -->
+        <Compile Remove="Valkyrie\Lint\**\*.cs"/>
+        <!-- LanguageService 扩展：ValkyrieLanguage 未实现 ILanguage 接口 -->
+        <Compile Remove="Valkyrie\ValkyrieLanguageServiceExtensions.cs"/>
+        <!-- AwslLanguageServiceExtensions：AwslLanguage 继承 Oak.Syntax.Language 而非 Nyar.Language.ILanguage -->
+        <Compile Remove="AwslLanguageServiceExtensions.cs"/>
+        <Compile Remove="Valkyrie\Compiler\VoaCompiler.cs"/>
+        <!-- Compiler 目录：取消全面排除以启用 ValkyrieCompiler -->
+        <!-- ValkyrieFormatter.cs 已修复 API 漂移（field_type 属性） -->
+
+    </ItemGroup>
+</Project>

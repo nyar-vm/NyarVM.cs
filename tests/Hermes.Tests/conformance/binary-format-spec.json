@@ -1,0 +1,352 @@
+{
+    "version": "1.0",
+    "description": "Hermes 二进制序列化格式规范 — 跨语言一致性测试向量",
+    "endianness": "little-endian",
+    "stringEncoding": "length-prefixed-utf8 (7-bit-encoded-length + utf8-bytes, BinaryWriter.WriteString)",
+    "typeTagSize": "1 byte (uint8, cast from HermesType enum)",
+    "typeTagMap": {
+        "Int8": "0x00",
+        "Int16": "0x01",
+        "Int32": "0x02",
+        "Int64": "0x03",
+        "UInt8": "0x04",
+        "UInt16": "0x05",
+        "UInt32": "0x06",
+        "UInt64": "0x07",
+        "Float32": "0x08",
+        "Float64": "0x09",
+        "Bool": "0x0a",
+        "Utf8": "0x0b",
+        "Utf16": "0x0c",
+        "Unit": "0x0d",
+        "List": "0x0e",
+        "Array": "0x0f",
+        "Dict": "0x10",
+        "Record": "0x11",
+        "Option": "0x12",
+        "Result": "0x13",
+        "Stream": "0x14",
+        "Class": "0x15",
+        "Enum": "0x16",
+        "Flags": "0x17",
+        "Union": "0x18",
+        "Model": "0x19",
+        "Cache": "0x1a",
+        "StreamStorage": "0x1b",
+        "Service": "0x1c",
+        "Micro": "0x1d",
+        "Unknown": "0x1e"
+    },
+    "formatRules": {
+        "primitive": "1字节类型标签 + 固定宽度载荷（小端序）",
+        "string": "1字节类型标签 + BinaryWriter.WriteString（7-bit-encoded长度 + UTF-8字节）",
+        "list": "1字节类型标签 + 4字节元素数(int32 LE) + 递归序列化每个元素",
+        "dict": "1字节类型标签 + 4字节条目数(int32 LE) + (key-string + value) 交替",
+        "option": "1字节类型标签 + 1字节存在标记(0x00=None, 0x01=Some) + Some时递归序列化内部值",
+        "result": "1字节类型标签 + 1字节结果标记(0x00=Ok, 0x01=Err) + 递归序列化内部值",
+        "class": "1字节类型标签 + 4字节字段数(int32 LE) + (key-string + value) 交替",
+        "enumByName": "1字节类型标签 + 1字节子标签(0x00) + 名称字符串",
+        "enumByValue": "1字节类型标签 + 1字节子标签(0x01) + 4字节int32值",
+        "flags": "1字节类型标签 + 8字节int64位掩码(LE)",
+        "union": "1字节类型标签 + 变体名称字符串 + 4字节字段数(int32 LE) + (key-string + value) 交替"
+    },
+    "testVectors": [
+        {
+            "id": "int8-negative",
+            "category": "primitive",
+            "hermesType": "Int8",
+            "description": "Int8: 1字节标签 + 1字节有符号整数",
+            "value": -42,
+            "expectedHex": "00d6"
+        },
+        {
+            "id": "int8-zero",
+            "category": "primitive",
+            "hermesType": "Int8",
+            "value": 0,
+            "expectedHex": "0000"
+        },
+        {
+            "id": "int8-max",
+            "category": "primitive",
+            "hermesType": "Int8",
+            "value": 127,
+            "expectedHex": "007f"
+        },
+        {
+            "id": "int8-min",
+            "category": "primitive",
+            "hermesType": "Int8",
+            "value": -128,
+            "expectedHex": "0080"
+        },
+        {
+            "id": "int16-positive",
+            "category": "primitive",
+            "hermesType": "Int16",
+            "description": "Int16: 1字节标签 + 2字节有符号整数(LE)",
+            "value": 1000,
+            "expectedHex": "01e803"
+        },
+        {
+            "id": "int16-negative",
+            "category": "primitive",
+            "hermesType": "Int16",
+            "value": -1000,
+            "expectedHex": "0118fc"
+        },
+        {
+            "id": "int32-positive",
+            "category": "primitive",
+            "hermesType": "Int32",
+            "description": "Int32: 1字节标签 + 4字节有符号整数(LE)",
+            "value": 100000,
+            "expectedHex": "02a0860100"
+        },
+        {
+            "id": "int32-negative",
+            "category": "primitive",
+            "hermesType": "Int32",
+            "value": -1,
+            "expectedHex": "02ffffffff"
+        },
+        {
+            "id": "int64-large",
+            "category": "primitive",
+            "hermesType": "Int64",
+            "description": "Int64: 1字节标签 + 8字节有符号整数(LE)",
+            "value": 9999999999,
+            "expectedHex": "03ff0054a202000000"
+        },
+        {
+            "id": "uint8",
+            "category": "primitive",
+            "hermesType": "UInt8",
+            "description": "UInt8: 1字节标签 + 1字节无符号整数",
+            "value": 200,
+            "expectedHex": "04c8"
+        },
+        {
+            "id": "uint16",
+            "category": "primitive",
+            "hermesType": "UInt16",
+            "description": "UInt16: 1字节标签 + 2字节无符号整数(LE)",
+            "value": 50000,
+            "expectedHex": "0550c3"
+        },
+        {
+            "id": "uint32",
+            "category": "primitive",
+            "hermesType": "UInt32",
+            "description": "UInt32: 1字节标签 + 4字节无符号整数(LE)",
+            "value": 3000000000,
+            "expectedHex": "0600f0b2b2"
+        },
+        {
+            "id": "uint64-max",
+            "category": "primitive",
+            "hermesType": "UInt64",
+            "description": "UInt64: 1字节标签 + 8字节无符号整数(LE)",
+            "value": 18446744073709551615,
+            "expectedHex": "07ffffffffffffffff"
+        },
+        {
+            "id": "float32-pi",
+            "category": "primitive",
+            "hermesType": "Float32",
+            "description": "Float32: 1字节标签 + 4字节IEEE754单精度(LE)",
+            "value": 3.14,
+            "expectedHex": "08c3f54840"
+        },
+        {
+            "id": "float32-zero",
+            "category": "primitive",
+            "hermesType": "Float32",
+            "value": 0.0,
+            "expectedHex": "0800000000"
+        },
+        {
+            "id": "float64-pi",
+            "category": "primitive",
+            "hermesType": "Float64",
+            "description": "Float64: 1字节标签 + 8字节IEEE754双精度(LE)",
+            "value": 3.141592653589793,
+            "expectedHex": "09182d4454fb210940"
+        },
+        {
+            "id": "float64-zero",
+            "category": "primitive",
+            "hermesType": "Float64",
+            "value": 0.0,
+            "expectedHex": "090000000000000000"
+        },
+        {
+            "id": "bool-true",
+            "category": "primitive",
+            "hermesType": "Bool",
+            "description": "Bool: 1字节标签 + 1字节(0x01=true, 0x00=false)",
+            "value": true,
+            "expectedHex": "0a01"
+        },
+        {
+            "id": "bool-false",
+            "category": "primitive",
+            "hermesType": "Bool",
+            "value": false,
+            "expectedHex": "0a00"
+        },
+        {
+            "id": "utf8-ascii",
+            "category": "primitive",
+            "hermesType": "Utf8",
+            "description": "Utf8: 1字节标签 + 7-bit-encoded长度 + UTF-8字节",
+            "value": "hello",
+            "expectedHex": "0b0568656c6c6f"
+        },
+        {
+            "id": "utf8-empty",
+            "category": "primitive",
+            "hermesType": "Utf8",
+            "value": "",
+            "expectedHex": "0b00"
+        },
+        {
+            "id": "utf8-unicode",
+            "category": "primitive",
+            "hermesType": "Utf8",
+            "value": "你好",
+            "expectedHex": "0b06e4bda0e5a5bd"
+        },
+        {
+            "id": "utf16",
+            "category": "primitive",
+            "hermesType": "Utf16",
+            "description": "Utf16: 二进制格式中仍用7-bit-encoded长度 + UTF-8字节",
+            "value": "hello",
+            "expectedHex": "0c0568656c6c6f"
+        },
+        {
+            "id": "unit",
+            "category": "primitive",
+            "hermesType": "Unit",
+            "description": "Unit: 1字节标签, 无载荷",
+            "value": null,
+            "expectedHex": "0d"
+        },
+        {
+            "id": "list-int32",
+            "category": "collection",
+            "hermesType": "List",
+            "description": "List: 1字节标签 + 4字节元素数 + 递归序列化",
+            "value": [
+                1,
+                2,
+                3
+            ],
+            "expectedHex": "0e030000000200000001020000000203000000"
+        },
+        {
+            "id": "list-empty",
+            "category": "collection",
+            "hermesType": "List",
+            "value": [],
+            "expectedHex": "0e00000000"
+        },
+        {
+            "id": "dict-simple",
+            "category": "collection",
+            "hermesType": "Dict",
+            "description": "Dict: 1字节标签 + 4字节条目数 + (key-string + value) 交替",
+            "value": {
+                "a": 1
+            },
+            "expectedHex": "100100000001610200000001000000"
+        },
+        {
+            "id": "option-some-int32",
+            "category": "special",
+            "hermesType": "Option",
+            "description": "Option Some: 1字节标签 + 0x01 + 内部值",
+            "value": {
+                "some": 42
+            },
+            "expectedHex": "1201022a000000"
+        },
+        {
+            "id": "option-none",
+            "category": "special",
+            "hermesType": "Option",
+            "description": "Option None: 1字节标签 + 0x00",
+            "value": null,
+            "expectedHex": "1200"
+        },
+        {
+            "id": "result-ok-int32",
+            "category": "special",
+            "hermesType": "Result",
+            "description": "Result Ok: 1字节标签 + 0x00 + 内部值",
+            "value": {
+                "ok": true,
+                "value": 42
+            },
+            "expectedHex": "1300022a000000"
+        },
+        {
+            "id": "result-err-utf8",
+            "category": "special",
+            "hermesType": "Result",
+            "description": "Result Err: 1字节标签 + 0x01 + 错误值",
+            "value": {
+                "ok": false,
+                "error": "fail"
+            },
+            "expectedHex": "13010b046661696c"
+        },
+        {
+            "id": "class-simple",
+            "category": "user-defined",
+            "hermesType": "Class",
+            "description": "Class: 1字节标签 + 4字节字段数 + (key-string + value) 交替",
+            "value": {
+                "name": "Alice",
+                "age": 30
+            },
+            "expectedHex": "1502000000046e616d650b05416c696365036167650200000001e000000"
+        },
+        {
+            "id": "enum-by-name",
+            "category": "user-defined",
+            "hermesType": "Enum",
+            "description": "Enum名称模式: 1字节标签 + 0x00 + 名称字符串",
+            "value": "Active",
+            "expectedHex": "160006416374697665"
+        },
+        {
+            "id": "enum-by-value",
+            "category": "user-defined",
+            "hermesType": "Enum",
+            "description": "Enum整数模式: 1字节标签 + 0x01 + 4字节int32",
+            "value": 2,
+            "expectedHex": "160102000000"
+        },
+        {
+            "id": "flags-bitmask",
+            "category": "user-defined",
+            "hermesType": "Flags",
+            "description": "Flags: 1字节标签 + 8字节int64位掩码(LE)",
+            "value": 5,
+            "expectedHex": "170500000000000000"
+        },
+        {
+            "id": "union-simple",
+            "category": "user-defined",
+            "hermesType": "Union",
+            "description": "Union: 1字节标签 + 变体名称字符串 + 4字节字段数 + 字段键值对",
+            "value": {
+                "variant": "Circle",
+                "radius": 10
+            },
+            "expectedHex": "1806436972636c650100000006726164697573020a000000"
+        }
+    ]
+}

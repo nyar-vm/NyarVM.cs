@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <RootNamespace>Std.Template.Report</RootNamespace>
+        <AssemblyName>Sonic.Standard.Template.Report</AssemblyName>
+        <PackageId>Sonic.Standard.Template.Report</PackageId>
+        <Version>0.1.0</Version>
+        <Authors>NyarVM</Authors>
+        <Description>报表生成器</Description>
+        <PackageProjectUrl>https://github.com/nyar-vm/DejavuEngine</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/nyar-vm/DejavuEngine</RepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageTags>template;report</PackageTags>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Dejavu\Dejavu.csproj"/>
+    </ItemGroup>
+
+
+  <ItemGroup>
+        <Compile Remove="BenchmarkReportGenerator.cs"/>
+        <Compile Remove="ReportGenerator.cs"/>
+  
+        <Compile Remove="CoverageReportGenerator.cs"/>
+        <Compile Remove="TestReportGenerator.cs"/>
+    </ItemGroup>
+</Project>

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <PackageId>Sonic.Standard.Data.Text.Wat</PackageId>
+        <RootNamespace>Oak.Wat</RootNamespace>
+        <AssemblyName>Sonic.Standard.Data.Text.Wat</AssemblyName>
+        <Authors>Nyar Team - Oak Group</Authors>
+        <Description>WebAssembly Text Format (WAT) 文本编解码</Description>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Sonic.Standard.Data.Text\Sonic.Standard.Data.Text.csproj"/>
+    </ItemGroup>
+</Project>

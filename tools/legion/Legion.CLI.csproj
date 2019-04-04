@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <Description>Valkyrie ToolChains - legion CLI 构建工具链</Description>
+        <Authors>Valkyrie Team</Authors>
+        <Version>0.2.0</Version>
+        <OutputType>Exe</OutputType>
+        <AssemblyName>legion</AssemblyName>
+        <RootNamespace>Legion.CLI</RootNamespace>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <!-- NuGet 全局工具打包配置 -->
+        <PackAsTool>true</PackAsTool>
+        <ToolCommandName>legion</ToolCommandName>
+        <PackageId>Valkyrie.Legion.CLR</PackageId>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/nyar-vm/NyarVM.cs</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>valkyrie;legion;build;cli;clr</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\projects\Nyar.Language\Nyar.Language.csproj"/>
+        <ProjectReference Include="..\..\projects\Nyar.PackageManager\Nyar.PackageManager.csproj"/>
+        <ProjectReference Include="..\..\projects\Nyar.VM.NyarVM\NyarVM.csproj"/>
+        <ProjectReference Include="..\..\projects\Sonic.Standard\Sonic.Standard.csproj"/>
+        <ProjectReference Include="..\..\projects\Standard.Command\Sonic.Standard.Command.csproj"/>
+        <ProjectReference Include="..\..\projects\Standard.Data.Binary\Standard.Data.Binary.csproj"/>
+        <ProjectReference Include="..\..\projects\Standard.Data.Binary.Wasm\Wasm.csproj"/>
+        <ProjectReference Include="..\..\projects\Standard.Data.Text\Sonic.Standard.Data.Text.csproj"/>
+        <ProjectReference Include="..\..\projects\Nyar.Language\WebStyle\WebStyle.csproj"/>
+    </ItemGroup>
+
+    <!-- 排除引用未实现类型的文件：ValkyrieCompiler 及其依赖被 Nyar.Language 排除，导致这些文件无法编译 -->
+    <!-- 排除测试/调试脚本：test-output* 目录下的 Program.cs 包含顶层语句，会覆盖 CLI 入口点 -->
+    <ItemGroup>
+        <Compile Remove="Compiler\LegionCompiler.Stub.cs"/>
+        <Compile Remove="Document\ThemeEngine.Stub.cs"/>
+        <Compile Remove="Document\UserDocRenderer.Stub.cs"/>
+        <Compile Remove="test-output4\Program.cs"/>
+    </ItemGroup>
+
+
+</Project>

@@ -1,0 +1,104 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <RootNamespace>Nyar.VM.LegacyVM</RootNamespace>
+        <AssemblyName>Nyar.VM.LegacyVM</AssemblyName>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Nyar\Nyar.csproj"/>
+        <ProjectReference Include="..\Nyar.Language\Nyar.Language.csproj"/>
+        <ProjectReference Include="..\Sonic.Standard.Data.Text\Sonic.Standard.Data.Text.csproj"/>
+    </ItemGroup>
+
+    <!-- 包含 Oak.Typescript 和 Oak.Rust 解析器源码（这些文件在 Sonic.Standard.Data.Text 中被排除编译） -->
+    <!-- 仅包含 Lexer/Parser/AST/Token/NodeKind 等核心文件，排除 Converter/Program/Pipeline 等依赖 Nyar 的文件 -->
+    <ItemGroup>
+        <Compile Include="..\Sonic.Standard.Data.Text\Typescript\AST\**\*.cs" LinkBase="Oak\Typescript\AST" />
+        <Compile Include="..\Sonic.Standard.Data.Text\Typescript\Lexer\**\*.cs" LinkBase="Oak\Typescript\Lexer" />
+        <Compile Include="..\Sonic.Standard.Data.Text\Typescript\Parsing\**\*.cs" LinkBase="Oak\Typescript\Parsing" />
+    </ItemGroup>
+
+    <!-- 包含 Oak.Julia 解析器源码（这些文件在 Sonic.Standard.Data.Text 中被排除编译） -->
+    <ItemGroup>
+        <Compile Include="..\Sonic.Standard.Data.Text\Julia\Lexer\JlLexer.cs" LinkBase="Oak\Julia\Lexer" />
+        <Compile Include="..\Sonic.Standard.Data.Text\Julia\Lexer\JlToken.cs" LinkBase="Oak\Julia\Lexer" />
+        <Compile Include="..\Sonic.Standard.Data.Text\Julia\Lexer\JlTokenType.cs" LinkBase="Oak\Julia\Lexer" />
+        <Compile Include="..\Sonic.Standard.Data.Text\Julia\Lexer\JlKeywords.cs" LinkBase="Oak\Julia\Lexer" />
+        <Compile Include="..\Sonic.Standard.Data.Text\Julia\Parser\JlParser.cs" LinkBase="Oak\Julia\Parser" />
+        <Compile Include="..\Sonic.Standard.Data.Text\Julia\AST\JlAstNode.cs" LinkBase="Oak\Julia\AST" />
+        <Compile Include="..\Sonic.Standard.Data.Text\Julia\AST\JlDeclarations.cs" LinkBase="Oak\Julia\AST" />
+        <Compile Include="..\Sonic.Standard.Data.Text\Julia\AST\JlExpressions.cs" LinkBase="Oak\Julia\AST" />
+        <Compile Include="..\Sonic.Standard.Data.Text\Julia\AST\JlStatements.cs" LinkBase="Oak\Julia\AST" />
+        <Compile Include="..\Sonic.Standard.Data.Text\Julia\Syntax\JlNodeKind.cs" LinkBase="Oak\Julia\Syntax" />
+        <Compile Include="..\Sonic.Standard.Data.Text\Julia\JuliaLanguage.cs" LinkBase="Oak\Julia" />
+    </ItemGroup>
+
+    <!-- 包含 Oak.Python 解析器源码（这些文件在 Sonic.Standard.Data.Text 中被排除编译） -->
+
+    <!-- 包含 Oak.C 解析器源码（这些文件在 Sonic.Standard.Data.Text 中被排除编译） -->
+    <ItemGroup>
+        <Compile Include="..\Sonic.Standard.Data.Text\C\CLexer.cs" LinkBase="Oak\C" />
+        <Compile Include="..\Sonic.Standard.Data.Text\C\CParser.cs" LinkBase="Oak\C" />
+        <Compile Include="..\Sonic.Standard.Data.Text\C\CAstNode.cs" LinkBase="Oak\C" />
+        <Compile Include="..\Sonic.Standard.Data.Text\C\CToken.cs" LinkBase="Oak\C" />
+        <Compile Include="..\Sonic.Standard.Data.Text\C\CNodeKind.cs" LinkBase="Oak\C" />
+    </ItemGroup>
+
+    <!-- 包含 Oak.JavaScript 解析器源码（委托给 Oak.Typescript） -->
+    <ItemGroup>
+      <Folder Include="..\Sonic.Standard.Data.Text\javascript\Lexer\">
+        <Link>Oak\JavaScript\Lexer</Link>
+      </Folder>
+      <Folder Include="..\Sonic.Standard.Data.Text\javascript\Parser\">
+        <Link>Oak\JavaScript\Parser</Link>
+      </Folder>
+      <Folder Include="..\Sonic.Standard.Data.Text\Python\AST\">
+        <Link>Oak\Python\AST</Link>
+      </Folder>
+      <Folder Include="..\Sonic.Standard.Data.Text\Python\Lexer\">
+        <Link>Oak\Python\Lexer</Link>
+      </Folder>
+      <Folder Include="..\Sonic.Standard.Data.Text\Python\Parser\">
+        <Link>Oak\Python\Parser</Link>
+      </Folder>
+      <Folder Include="..\Sonic.Standard.Data.Text\Python\Syntax\">
+        <Link>Oak\Python\Syntax</Link>
+      </Folder>
+      <Folder Include="..\Sonic.Standard.Data.Text\Rust\">
+        <Link>Oak\Rust</Link>
+      </Folder>
+      <Folder Include="..\Sonic.Standard.Data.Text\Typescript\">
+        <Link>Oak\Typescript</Link>
+      </Folder>
+      <Folder Include="Converter\" />
+    </ItemGroup>
+
+    <!-- 排除引用未更新接口方法的文件 -->
+    <ItemGroup>
+        <Compile Remove="Evaluator\BashEvaluator.cs"/>
+        <Compile Remove="Evaluator\PowerShellEvaluator.cs"/>
+        <Compile Remove="Evaluator\BatchEvaluator.cs"/>
+        <Compile Remove="Evaluator\JuliaTreeEvaluator.cs"/>
+        <Compile Remove="Evaluator\CTreeEvaluator.cs"/>
+        <Compile Remove="Evaluator\RustTreeEvaluator.cs"/>
+
+        <!-- LegacyVmRunner 引用了上述被排除的求值器类型，暂时排除 -->
+        <Compile Remove="Runner\LegacyVmRunner.cs"/>
+    </ItemGroup>
+
+    <!-- 排除 C/Julia/Json 解析器源码（依赖链缺失，对应求值器也已排除） -->
+    <ItemGroup>
+        <Compile Remove="..\Sonic.Standard.Data.Text\C\**\*.cs"/>
+        <Compile Remove="..\Sonic.Standard.Data.Text\Julia\**\*.cs"/>
+        <Compile Remove="..\Sonic.Standard.Data.Text\Json\**\*.cs"/>
+    </ItemGroup>
+
+    <!-- Oak.Sql 解析器源码已通过 ProjectReference 引用 Sonic.Standard.Data.Text 获得，无需额外包含 -->
+
+    </Project>

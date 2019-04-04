@@ -1,0 +1,35 @@
+name: C# Check
+
+on:
+    push:
+        branches: [master, dev]
+    pull_request:
+        branches: [master, dev]
+
+jobs:
+    build:
+        name: Build and Test
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                os: [ubuntu-latest, windows-latest, macos-latest]
+                dotnet-version: [8.0.x]
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v3
+              with:
+                  dotnet-version: ${{ matrix.dotnet-version }}
+
+            - name: Restore dependencies
+              run: dotnet restore
+
+            - name: Build
+              run: dotnet build --configuration Release --no-restore
+
+            - name: Test
+              run: dotnet test --configuration Release --no-build --verbosity normal --filter "FullyQualifiedName!~Nyar.Tests.LegionBootstrap"

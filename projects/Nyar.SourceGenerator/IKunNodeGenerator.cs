@@ -1,0 +1,1044 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
+
+namespace Nyar.Generator;
+
+/// <summary>
+///     ⛔ 此生成器已废弃。OA 重构后不再生成强类型节点类层级，
+///     新的方言操作符应通过 <see cref="DialectGenerator"/> 生成
+///     algebra + descriptor + reifier + pattern 等 OA 核心产物。
+///     详见 .trae/specs/oa-full-pipeline/spec.md。
+/// </summary>
+[Obsolete("OaNodeGenerator 已废弃，不再生成强类型节点类。请使用 DialectGenerator 生成的 OA 核心产物")]
+[Generator]
+public sealed class OaNodeGenerator : ISourceGenerator
+{
+    private const string AttributeFullName = "Nyar.IR.Intent.OaNodeAttribute";
+    private const string AlgebraNodeAttributeFullName = "Nyar.IR.Intent.AlgebraNodeAttribute";
+    private const string IdType = "Nyar.IR.Intent.Id";
+    private const string NullableIdType = "Nyar.IR.Intent.Id?";
+    private const string NullableIdTypeVerbose = "System.Nullable<Nyar.IR.Intent.Id>";
+    private const string ImmutableArrayIdType = "System.Collections.Immutable.ImmutableArray<Nyar.IR.Intent.Id>";
+    private const string IReadOnlyListIdType = "System.Collections.Generic.IReadOnlyList<Nyar.IR.Intent.Id>";
+    private const string GlobalIdType = "global::Nyar.IR.Intent.Id";
+    private const string GlobalNullableIdType = "global::Nyar.IR.Intent.Id?";
+    private const string GlobalNullableIdTypeVerbose = "global::System.Nullable<global::Nyar.IR.Intent.Id>";
+
+    private const string GlobalImmutableArrayIdType =
+        "global::System.Collections.Immutable.ImmutableArray<global::Nyar.IR.Intent.Id>";
+
+    private const string GlobalIReadOnlyListIdType =
+        "global::System.Collections.Generic.IReadOnlyList<global::Nyar.IR.Intent.Id>";
+
+    /// <summary>
+    ///     C# 保留关键字集合，用于在生成代码时对关键字进行转义
+    /// </summary>
+    private static readonly HashSet<string> CSharpKeywords =
+    [
+        "abstract", "as", "base", "bool", "break", "byte", "case", "catch", "char", "checked",
+        "class", "const", "continue", "decimal", "default", "delegate", "do", "double",
+        "else", "enum", "event", "explicit", "extern", "false", "finally", "fixed", "float",
+        "for", "foreach", "goto", "if", "implicit", "in", "int", "interface", "internal",
+        "is", "lock", "long", "namespace", "new", "null", "object", "operator", "out",
+        "override", "params", "private", "protected", "public", "readonly", "ref", "return",
+        "sbyte", "sealed", "short", "sizeof", "stackalloc", "static", "string", "struct",
+        "switch", "this", "throw", "true", "try", "typeof", "uint", "ulong", "unchecked",
+        "unsafe", "ushort", "using", "virtual", "void", "volatile", "while"
+    ];
+
+    public void Initialize(GeneratorInitializationContext context)
+    {
+    }
+
+    public void Execute(GeneratorExecutionContext context)
+    {
+        var nodes = new List<NodeInfo>();
+
+        foreach (var tree in context.Compilation.SyntaxTrees)
+        {
+            var semanticModel = context.Compilation.GetSemanticModel(tree);
+            var root = tree.GetRoot();
+
+            foreach (var typeDecl in root.DescendantNodes().OfType<RecordDeclarationSyntax>())
+            {
+                var typeSymbol = semanticModel.GetDeclaredSymbol(typeDecl) as INamedTypeSymbol;
+                if (typeSymbol is null) continue;
+
+                var hasAttr = typeSymbol.GetAttributes()
+                    .Any(a =>
+                    {
+                        var displayName = a.AttributeClass?.ToDisplayString();
+                        return displayName == AttributeFullName || displayName == AlgebraNodeAttributeFullName;
+                    });
+
+                if (!hasAttr) continue;
+
+                var (isProcessNode, isPhysicalNode) = ShouldProcessNode(typeSymbol);
+                if (!isProcessNode) continue;
+
+                var parameters = GetPrimaryConstructorParameters(typeSymbol);
+                var paramInfos = AnalyzeParameters(parameters);
+
+                var containerFullName = GetContainerFullName(typeSymbol);
+
+                nodes.Add(new NodeInfo(typeSymbol, paramInfos, containerFullName, isPhysicalNode));
+            }
+        }
+
+        nodes =
+        [
+            .. nodes
+                .GroupBy(node => $"{node.TypeSymbol.ToDisplayString()}|{node.ContainerFullName}|{node.IsPhysicalNode}")
+                .Select(group => group.First())
+        ];
+
+        if (nodes.Count == 0) return;
+
+        var groupedByContainer = nodes.GroupBy(n => n.ContainerFullName);
+
+        foreach (var group in groupedByContainer)
+            if (group.Key is not null)
+                GenerateNestedNodes(context, [.. group]);
+            else
+                GenerateTopLevelNodes(context, [.. group]);
+    }
+
+    private void GenerateNestedNodes(GeneratorExecutionContext context, List<NodeInfo> nodes)
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine("// <auto-generated/>");
+        sb.AppendLine("using System.Collections.Generic;");
+        sb.AppendLine("using System.Collections.Immutable;");
+        sb.AppendLine("using System.Linq;");
+        sb.AppendLine("using Nyar.EGraph;");
+        sb.AppendLine("using Nyar.IR.Intent;");
+
+        var isPhysicalNode = nodes[0].IsPhysicalNode;
+        if (isPhysicalNode) sb.AppendLine("using Nyar.IR.Physical;");
+
+        sb.AppendLine();
+
+        var ns = nodes[0].TypeSymbol.ContainingNamespace.ToDisplayString();
+        sb.AppendLine($"namespace {ns};");
+        sb.AppendLine();
+
+        var containingType = GetContainingTypeChain(nodes[0].TypeSymbol);
+        sb.AppendLine(containingType.Open);
+
+        for (var i = 0; i < nodes.Count; i++)
+        {
+            var node = nodes[i];
+            GenerateNodeOverrides(sb, node, "    ");
+            if (i < nodes.Count - 1) sb.AppendLine();
+        }
+
+        sb.AppendLine(containingType.Close);
+
+        var containerShortName = isPhysicalNode ? "PhysicalNode" : "AlgebraNode";
+        context.AddSource($"{containerShortName}.Nodes.g.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
+
+        GenerateNestedBuilder(context, nodes, containerShortName);
+        GenerateNestedFluentBuilder(context, nodes, containerShortName);
+        GenerateNestedMatcher(context, nodes, containerShortName);
+    }
+
+    private void GenerateTopLevelNodes(GeneratorExecutionContext context, List<NodeInfo> nodes)
+    {
+        var groupedByNamespace = nodes.GroupBy(n => n.TypeSymbol.ContainingNamespace.ToDisplayString());
+
+        foreach (var nsGroup in groupedByNamespace)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("// <auto-generated/>");
+            sb.AppendLine("using System.Collections.Generic;");
+            sb.AppendLine("using System.Collections.Immutable;");
+            sb.AppendLine("using System.Linq;");
+            sb.AppendLine("using Nyar.EGraph;");
+            sb.AppendLine("using Nyar.IR.Intent;");
+
+            var hasPhysicalNode = nsGroup.Any(n => n.IsPhysicalNode);
+            if (hasPhysicalNode) sb.AppendLine("using Nyar.IR.Physical;");
+
+            sb.AppendLine();
+
+            sb.AppendLine($"namespace {nsGroup.Key};");
+            sb.AppendLine();
+
+            var nodeLists = nsGroup.ToList();
+            for (var i = 0; i < nodeLists.Count; i++)
+            {
+                var node = nodeLists[i];
+                GenerateNodeOverrides(sb, node, "");
+                if (i < nodeLists.Count - 1) sb.AppendLine();
+            }
+
+            var fileName = nsGroup.Key.Replace('.', '_') + ".Nodes.g.cs";
+            context.AddSource(fileName, SourceText.From(sb.ToString(), Encoding.UTF8));
+        }
+
+        GenerateDialectBuilder(context, nodes);
+        GenerateDialectFluentBuilder(context, nodes);
+        GenerateOaVisitor(context, nodes);
+        GenerateDialectMatcher(context, nodes);
+    }
+
+    private void GenerateNodeOverrides(StringBuilder sb, NodeInfo node, string indent)
+    {
+        var typeName = node.TypeSymbol.Name;
+
+        sb.AppendLine($"{indent}public partial record {typeName}");
+        sb.AppendLine($"{indent}{{");
+
+        GenerateChildIds(sb, node, indent + "    ");
+        sb.AppendLine();
+        GenerateMapChildren(sb, node, indent + "    ");
+
+        sb.AppendLine($"{indent}}}");
+    }
+
+    private void GenerateChildIds(StringBuilder sb, NodeInfo node, string indent)
+    {
+        var childParams = node.Parameters.Where(p => p.IsChild).ToList();
+
+        if (childParams.Count == 0)
+        {
+            sb.AppendLine($"{indent}public override IReadOnlyList<Id> child_ids() => Array.Empty<Id>();");
+            return;
+        }
+
+        if (childParams.Count == 1 && childParams[0].IsChildList)
+        {
+            sb.AppendLine($"{indent}public override IReadOnlyList<Id> child_ids() => {childParams[0].Name};");
+            return;
+        }
+
+        var parts = new List<string>();
+        foreach (var p in childParams)
+            if (p.IsNullableChild)
+                parts.Add($"{p.Name}.GetValueOrDefault()");
+            else
+                parts.Add(p.Name);
+
+        if (parts.Count == 1 && !childParams[0].IsChildList)
+        {
+            if (childParams[0].IsNullableChild)
+            {
+                sb.AppendLine($"{indent}public override IReadOnlyList<Id> child_ids()");
+                sb.AppendLine($"{indent}{{");
+                sb.AppendLine($"{indent}    var result = new List<Id>();");
+                sb.AppendLine(
+                    $"{indent}    if ({childParams[0].Name}.HasValue) result.Add({childParams[0].Name}.Value);");
+                sb.AppendLine($"{indent}    return result;");
+                sb.AppendLine($"{indent}}}");
+            }
+            else
+            {
+                sb.AppendLine($"{indent}public override IReadOnlyList<Id> child_ids() => new[] {{ {parts[0]} }};");
+            }
+
+            return;
+        }
+
+        var hasList = childParams.Any(p => p.IsChildList);
+        var hasNullable = childParams.Any(p => p.IsNullableChild);
+        if (hasList || hasNullable)
+        {
+            sb.AppendLine($"{indent}public override IReadOnlyList<Id> child_ids()");
+            sb.AppendLine($"{indent}{{");
+            sb.AppendLine($"{indent}    var result = new List<Id>();");
+            foreach (var p in childParams)
+                if (p.IsChildList)
+                    sb.AppendLine($"{indent}    result.AddRange({p.Name});");
+                else if (p.IsNullableChild)
+                    sb.AppendLine($"{indent}    if ({p.Name}.HasValue) result.Add({p.Name}.Value);");
+                else
+                    sb.AppendLine($"{indent}    result.Add({p.Name});");
+
+            sb.AppendLine($"{indent}    return result;");
+            sb.AppendLine($"{indent}}}");
+        }
+        else
+        {
+            sb.AppendLine(
+                $"{indent}public override IReadOnlyList<Id> child_ids() => new[] {{ {string.Join(", ", parts)} }};");
+        }
+    }
+
+    private void GenerateMapChildren(StringBuilder sb, NodeInfo node, string indent)
+    {
+        var childParams = node.Parameters.Where(p => p.IsChild).ToList();
+        var baseTypeName = GetBaseTypeName(node);
+
+        if (childParams.Count == 0)
+        {
+            sb.AppendLine($"{indent}public override {baseTypeName} map_children(Func<Id, Id> f) => this;");
+            return;
+        }
+
+        var allParams = node.Parameters;
+        var args = new List<string>();
+
+        foreach (var p in allParams)
+            if (!p.IsChild)
+            {
+                args.Add(p.Name);
+            }
+            else if (p.IsNullableChild)
+            {
+                args.Add($"{p.Name}.HasValue ? f({p.Name}.Value) : (Id?){p.Name}");
+            }
+            else if (p.IsChildList)
+            {
+                if (p.TypeDisplay.Contains("ImmutableArray"))
+                    args.Add($"{p.Name}.Select(f).ToImmutableArray()");
+                else
+                    args.Add($"{p.Name}.Select(f).ToList()");
+            }
+            else
+            {
+                args.Add($"f({p.Name})");
+            }
+
+        var isNested = node.ContainerFullName is not null;
+        var typeName = isNested
+            ? node.TypeSymbol.Name
+            : node.TypeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
+                .Replace("global::", "");
+        sb.AppendLine(
+            $"{indent}public override {baseTypeName} map_children(Func<Id, Id> f) => new {typeName}({string.Join(", ", args)});");
+    }
+
+    private void GenerateNestedBuilder(GeneratorExecutionContext context, List<NodeInfo> nodes,
+        string containerShortName)
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine("// <auto-generated/>");
+        sb.AppendLine("using System.Collections.Generic;");
+        sb.AppendLine("using System.Collections.Immutable;");
+        sb.AppendLine("using Nyar.EGraph;");
+        sb.AppendLine("using Nyar.IR.Intent;");
+        sb.AppendLine();
+
+        var ns = nodes[0].TypeSymbol.ContainingNamespace.ToDisplayString();
+        sb.AppendLine($"namespace {ns};");
+        sb.AppendLine();
+
+        var builderClassName = containerShortName == "AlgebraNode" ? "AlgebraNodeBuilder" : "PhysicalNodeBuilder";
+        sb.AppendLine($"public static partial class {builderClassName}");
+        sb.AppendLine("{");
+
+        for (var i = 0; i < nodes.Count; i++)
+        {
+            var node = nodes[i];
+            GenerateBuilderMethod(sb, node, "    ", containerShortName);
+            if (i < nodes.Count - 1) sb.AppendLine();
+        }
+
+        sb.AppendLine("}");
+
+        context.AddSource($"{builderClassName}.g.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
+    }
+
+    private static void GenerateBuilderMethod(StringBuilder sb, NodeInfo node, string indent, string containerShortName)
+    {
+        var typeName = node.TypeSymbol.Name;
+        var parameters = node.Parameters;
+        var prefix = $"{containerShortName}.";
+
+        if (parameters.Count == 0)
+        {
+            sb.AppendLine($"{indent}public static {prefix}{typeName} {typeName}() => new();");
+            return;
+        }
+
+        var paramList = new List<string>();
+        var argList = new List<string>();
+
+        foreach (var p in parameters)
+        {
+            var paramType = p.TypeDisplay;
+            if (paramType is IdType or GlobalIdType) paramType = "Id";
+
+            var paramStr = $"{paramType} {p.Name}";
+            if (p.HasDefaultValue && p.DefaultValueExpression is not null) paramStr += $" = {p.DefaultValueExpression}";
+
+            paramList.Add(paramStr);
+            argList.Add(p.Name);
+        }
+
+        sb.AppendLine(
+            $"{indent}public static {prefix}{typeName} {typeName}({string.Join(", ", paramList)}) => new({string.Join(", ", argList)});");
+    }
+
+    private static (bool IsProcessNode, bool IsPhysicalNode) ShouldProcessNode(INamedTypeSymbol typeSymbol)
+    {
+        const string oaFqn = "global::Nyar.IR.Intent.Oa";
+        const string algebraNodeFqn = "global::Nyar.IR.Intent.AlgebraNode";
+        const string physicalNodeFqn = "global::Nyar.IR.Physical.PhysicalNode";
+
+        var current = typeSymbol.BaseType;
+        while (current is not null)
+        {
+            var fqn = current.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+            if (fqn == oaFqn) return (true, false);
+
+            if (fqn == algebraNodeFqn) return (true, false);
+
+            if (fqn == physicalNodeFqn) return (true, true);
+
+            current = current.BaseType;
+        }
+
+        return (false, false);
+    }
+
+    private static string? GetContainerFullName(INamedTypeSymbol typeSymbol)
+    {
+        var containingType = typeSymbol.ContainingType;
+        return containingType?.ToDisplayString();
+    }
+
+    private static (string Open, string Close) GetContainingTypeChain(INamedTypeSymbol typeSymbol)
+    {
+        var types = new List<INamedTypeSymbol>();
+        var current = typeSymbol.ContainingType;
+        while (current is not null)
+        {
+            types.Insert(0, current);
+            current = current.ContainingType;
+        }
+
+        var sb = new StringBuilder();
+        foreach (var t in types)
+        {
+            var keyword = t.IsRecord ? "record" : "class";
+            var abstractKeyword = t.IsAbstract ? "abstract " : "";
+            sb.AppendLine($"public {abstractKeyword}partial {keyword} {t.Name}");
+            sb.AppendLine("{");
+        }
+
+        var open = sb.ToString();
+
+        var closeSb = new StringBuilder();
+        for (var i = 0; i < types.Count; i++) closeSb.AppendLine("}");
+
+        return (open, closeSb.ToString());
+    }
+
+    private static List<IParameterSymbol> GetPrimaryConstructorParameters(INamedTypeSymbol typeSymbol)
+    {
+        var constructors = typeSymbol.InstanceConstructors
+            .Where(c => c.Parameters.Length > 0 && !c.IsImplicitlyDeclared)
+            .ToList();
+
+        if (constructors.Count == 0) return [];
+
+        var primaryConstructor = constructors
+            .OrderByDescending(c => c.Parameters.Length)
+            .First();
+
+        return [.. primaryConstructor.Parameters];
+    }
+
+    private static List<ParamInfo> AnalyzeParameters(List<IParameterSymbol> parameters)
+    {
+        var result = new List<ParamInfo>();
+
+        foreach (var param in parameters)
+        {
+            var typeDisplay = param.Type.ToDisplayString();
+            var isChild = false;
+            var isChildList = false;
+
+            var isNullableChild = false;
+
+            if (typeDisplay is IdType or GlobalIdType)
+            {
+                isChild = true;
+            }
+            else if (typeDisplay is NullableIdType or NullableIdTypeVerbose or GlobalNullableIdType
+                     or GlobalNullableIdTypeVerbose)
+            {
+                isChild = true;
+                isNullableChild = true;
+            }
+            else if (typeDisplay is ImmutableArrayIdType or IReadOnlyListIdType or GlobalImmutableArrayIdType
+                     or GlobalIReadOnlyListIdType)
+            {
+                isChild = true;
+                isChildList = true;
+            }
+
+            var hasDefault = param.HasExplicitDefaultValue;
+            var defaultExpr = hasDefault ? param.ExplicitDefaultValue?.ToString() ?? "null" : null;
+
+            var escapedName = EscapeCSharpKeyword(param.Name!);
+            result.Add(new ParamInfo(escapedName, typeDisplay, isChild, isChildList, isNullableChild,
+                hasDefault, defaultExpr));
+        }
+
+        return result;
+    }
+
+    private void GenerateDialectBuilder(GeneratorExecutionContext context, List<NodeInfo> nodes)
+    {
+        var groupedByNamespace = nodes.GroupBy(n => n.TypeSymbol.ContainingNamespace.ToDisplayString());
+
+        foreach (var nsGroup in groupedByNamespace)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("// <auto-generated/>");
+            sb.AppendLine("using System.Collections.Generic;");
+            sb.AppendLine("using System.Collections.Immutable;");
+            sb.AppendLine("using Nyar.EGraph;");
+            sb.AppendLine("using Nyar.IR.Intent;");
+            sb.AppendLine();
+
+            sb.AppendLine($"namespace {nsGroup.Key};");
+            sb.AppendLine();
+
+            var dialectName = nsGroup.Key.Split('.').Last();
+            sb.AppendLine("            /// <summary>");
+            sb.AppendLine($"            ///     {dialectName} 方言节点的 Builder 工厂方法");
+            sb.AppendLine("            /// </summary>");
+            sb.AppendLine($"public static partial class {dialectName}Builder");
+            sb.AppendLine("{");
+
+            var nodeLists = nsGroup.ToList();
+            for (var i = 0; i < nodeLists.Count; i++)
+            {
+                var node = nodeLists[i];
+                GenerateDialectBuilderMethod(sb, node, "    ");
+                if (i < nodeLists.Count - 1) sb.AppendLine();
+            }
+
+            sb.AppendLine("}");
+
+            var fileName = nsGroup.Key.Replace('.', '_') + ".Builder.g.cs";
+            context.AddSource(fileName, SourceText.From(sb.ToString(), Encoding.UTF8));
+        }
+    }
+
+    private static void GenerateDialectBuilderMethod(StringBuilder sb, NodeInfo node, string indent)
+    {
+        var typeName = node.TypeSymbol.Name;
+        var parameters = node.Parameters;
+
+        if (parameters.Count == 0)
+        {
+            sb.AppendLine($"{indent}public static {typeName} {typeName}() => new();");
+            return;
+        }
+
+        var paramList = new List<string>();
+        var argList = new List<string>();
+
+        foreach (var p in parameters)
+        {
+            var paramType = p.TypeDisplay;
+            var shortType = paramType
+                .Replace("Nyar.IR.Intent.Id", "Id")
+                .Replace("System.Collections.Immutable.ImmutableArray", "ImmutableArray")
+                .Replace("System.Collections.Generic.IReadOnlyList", "IReadOnlyList");
+            var paramStr = $"{shortType} {p.Name}";
+            if (p.HasDefaultValue && p.DefaultValueExpression is not null) paramStr += $" = {p.DefaultValueExpression}";
+
+            paramList.Add(paramStr);
+            argList.Add(p.Name);
+        }
+
+        sb.AppendLine(
+            $"{indent}public static {typeName} {typeName}({string.Join(", ", paramList)}) => new({string.Join(", ", argList)});");
+    }
+
+    private void GenerateOaVisitor(GeneratorExecutionContext context, List<NodeInfo> nodes)
+    {
+        var groupedByNamespace = nodes.GroupBy(n => n.TypeSymbol.ContainingNamespace.ToDisplayString());
+
+        foreach (var nsGroup in groupedByNamespace)
+        {
+            var allNodes = nsGroup.ToList();
+
+            var sb = new StringBuilder();
+            sb.AppendLine("// <auto-generated/>");
+            sb.AppendLine("using System;");
+            sb.AppendLine("using Nyar.IR.Intent;");
+            sb.AppendLine();
+
+            var ns = nsGroup.Key;
+            sb.AppendLine($"namespace {ns};");
+            sb.AppendLine();
+
+            var dialectName = ns.Split('.').Last();
+            sb.AppendLine("        /// <summary>");
+            sb.AppendLine($"        ///     {dialectName} 方言节点的访问者接口");
+            sb.AppendLine("        /// </summary>");
+            sb.AppendLine("        /// <typeparam name=\"TResult\">访问结果类型</typeparam>");
+            sb.AppendLine($"public interface I{dialectName}Visitor<out TResult>");
+            sb.AppendLine("{");
+
+            for (var i = 0; i < allNodes.Count; i++)
+            {
+                var node = allNodes[i];
+                var typeName = node.TypeSymbol.Name;
+                var dataParams = node.Parameters.Where(p => !p.IsChild).ToList();
+                var childParams = node.Parameters.Where(p => p.IsChild).ToList();
+
+                if (dataParams.Count == 0 && childParams.Count == 0)
+                {
+                    sb.AppendLine($"    TResult Visit{typeName}();");
+                }
+                else
+                {
+                    var visitParams = new List<string>();
+                    foreach (var p in dataParams)
+                    {
+                        var shortType = p.TypeDisplay
+                            .Replace("System.Collections.Immutable.ImmutableArray", "ImmutableArray")
+                            .Replace("System.Collections.Generic.IReadOnlyList", "IReadOnlyList");
+                        visitParams.Add($"{shortType} {p.Name}");
+                    }
+
+                    foreach (var p in childParams)
+                        if (p.IsChildList)
+                            visitParams.Add($"IReadOnlyList<Id> {p.Name}");
+                        else if (p.IsNullableChild)
+                            visitParams.Add($"Id? {p.Name}");
+                        else
+                            visitParams.Add($"Id {p.Name}");
+
+                    sb.AppendLine($"    TResult Visit{typeName}({string.Join(", ", visitParams)});");
+                }
+            }
+
+            sb.AppendLine("}");
+            sb.AppendLine();
+
+            sb.AppendLine("        /// <summary>");
+            sb.AppendLine($"        ///     {dialectName} 方言节点的默认访问者（提供空实现基类）");
+            sb.AppendLine("        /// </summary>");
+            sb.AppendLine("        /// <typeparam name=\"TResult\">访问结果类型</typeparam>");
+            sb.AppendLine($"public abstract class {dialectName}VisitorBase<TResult> : I{dialectName}Visitor<TResult>");
+            sb.AppendLine("{");
+
+            for (var i = 0; i < allNodes.Count; i++)
+            {
+                var node = allNodes[i];
+                var typeName = node.TypeSymbol.Name;
+                var dataParams = node.Parameters.Where(p => !p.IsChild).ToList();
+                var childParams = node.Parameters.Where(p => p.IsChild).ToList();
+
+                if (dataParams.Count == 0 && childParams.Count == 0)
+                {
+                    sb.AppendLine($"    public virtual TResult Visit{typeName}() => DefaultResult;");
+                }
+                else
+                {
+                    var visitParams = new List<string>();
+                    foreach (var p in dataParams)
+                    {
+                        var shortType = p.TypeDisplay
+                            .Replace("System.Collections.Immutable.ImmutableArray", "ImmutableArray")
+                            .Replace("System.Collections.Generic.IReadOnlyList", "IReadOnlyList");
+                        visitParams.Add($"{shortType} {p.Name}");
+                    }
+
+                    foreach (var p in childParams)
+                        if (p.IsChildList)
+                            visitParams.Add($"IReadOnlyList<Id> {p.Name}");
+                        else if (p.IsNullableChild)
+                            visitParams.Add($"Id? {p.Name}");
+                        else
+                            visitParams.Add($"Id {p.Name}");
+
+                    sb.AppendLine(
+                        $"    public virtual TResult Visit{typeName}({string.Join(", ", visitParams)}) => DefaultResult;");
+                }
+            }
+
+            sb.AppendLine();
+            sb.AppendLine("    protected abstract TResult DefaultResult { get; }");
+            sb.AppendLine("}");
+
+            sb.AppendLine();
+
+            sb.AppendLine("        /// <summary>");
+            sb.AppendLine($"        ///     {dialectName} 方言节点的 Accept 扩展方法");
+            sb.AppendLine("        /// </summary>");
+            sb.AppendLine($"public static class {dialectName}VisitorExtensions");
+            sb.AppendLine("{");
+
+            for (var i = 0; i < allNodes.Count; i++)
+            {
+                var node = allNodes[i];
+                var typeName = node.TypeSymbol.Name;
+
+                sb.AppendLine(
+                    $"    public static TResult Accept<TResult>(this {typeName} node, I{dialectName}Visitor<TResult> visitor)");
+                sb.AppendLine("    {");
+
+                var callArgs = new List<string>();
+                foreach (var p in node.Parameters.Where(p => !p.IsChild)) callArgs.Add($"node.{p.Name}");
+
+                foreach (var p in node.Parameters.Where(p => p.IsChild)) callArgs.Add($"node.{p.Name}");
+
+                if (callArgs.Count == 0)
+                    sb.AppendLine($"        return visitor.Visit{typeName}();");
+                else
+                    sb.AppendLine($"        return visitor.Visit{typeName}({string.Join(", ", callArgs)});");
+
+                sb.AppendLine("    }");
+
+                if (i < allNodes.Count - 1) sb.AppendLine();
+            }
+
+            sb.AppendLine("}");
+
+            var fileName = ns.Replace('.', '_') + ".Visitor.g.cs";
+            context.AddSource(fileName, SourceText.From(sb.ToString(), Encoding.UTF8));
+        }
+    }
+
+    /// <summary>
+    ///     如果名称为 C# 保留关键字，则添加 @ 前缀进行转义
+    /// </summary>
+    /// <param name="name">原始名称。</param>
+    /// <returns>转义后的名称。</returns>
+    private static string EscapeCSharpKeyword(string name)
+    {
+        return CSharpKeywords.Contains(name) ? $"@{name}" : name;
+    }
+
+    private sealed class NodeInfo
+    {
+        public NodeInfo(INamedTypeSymbol typeSymbol, List<ParamInfo> parameters, string? containerFullName,
+            bool isPhysicalNode)
+        {
+            TypeSymbol = typeSymbol;
+            Parameters = parameters;
+            ContainerFullName = containerFullName;
+            IsPhysicalNode = isPhysicalNode;
+        }
+
+        public INamedTypeSymbol TypeSymbol { get; }
+        public List<ParamInfo> Parameters { get; }
+        public string? ContainerFullName { get; }
+        public bool IsPhysicalNode { get; }
+    }
+
+    private sealed class ParamInfo
+    {
+        public ParamInfo(string name, string typeDisplay, bool isChild, bool isChildList, bool isNullableChild,
+            bool hasDefaultValue = false, string? defaultValueExpression = null)
+        {
+            Name = name;
+            TypeDisplay = typeDisplay;
+            IsChild = isChild;
+            IsChildList = isChildList;
+            IsNullableChild = isNullableChild;
+            HasDefaultValue = hasDefaultValue;
+            DefaultValueExpression = defaultValueExpression;
+        }
+
+        public string Name { get; }
+        public string TypeDisplay { get; }
+        public bool IsChild { get; }
+        public bool IsChildList { get; }
+        public bool IsNullableChild { get; }
+        public bool HasDefaultValue { get; }
+        public string? DefaultValueExpression { get; }
+    }
+
+    #region 辅助方法
+
+    private static string GetBaseTypeName(NodeInfo node)
+    {
+        if (node.IsPhysicalNode) return "PhysicalNode";
+
+        // 检查基类是否为 AlgebraNode
+        var current = node.TypeSymbol.BaseType;
+        while (current is not null)
+        {
+            var fqn = current.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+            if (fqn == "global::Nyar.IR.Intent.AlgebraNode") return "AlgebraNode";
+
+            if (fqn == "global::Nyar.IR.Intent.Oa") return "Oa";
+
+            current = current.BaseType;
+        }
+
+        return "Oa";
+    }
+
+    private static string GetShortType(string typeDisplay, bool isNestedInOa)
+    {
+        return typeDisplay
+            .Replace("Nyar.IR.Intent.Id", "Id")
+            .Replace("System.Collections.Immutable.ImmutableArray", "ImmutableArray")
+            .Replace("System.Collections.Generic.IReadOnlyList", "IReadOnlyList");
+    }
+
+    #endregion
+
+    #region Fluent Builder 生成
+
+    private void GenerateNestedFluentBuilder(GeneratorExecutionContext context, List<NodeInfo> nodes,
+        string containerShortName)
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine("// <auto-generated/>");
+        sb.AppendLine("using System.Collections.Generic;");
+        sb.AppendLine("using System.Collections.Immutable;");
+        sb.AppendLine("using Nyar.EGraph;");
+        sb.AppendLine("using Nyar.IR.Intent;");
+        sb.AppendLine();
+
+        var ns = nodes[0].TypeSymbol.ContainingNamespace.ToDisplayString();
+        sb.AppendLine($"namespace {ns};");
+        sb.AppendLine();
+
+        var builderClassName = containerShortName == "AlgebraNode" ? "AlgebraNodeFluentBuilder" : "PhysicalNodeFluentBuilder";
+        var summaryName = containerShortName == "AlgebraNode" ? "AlgebraNode 核心节点" : "PhysicalNode 节点";
+        sb.AppendLine("        /// <summary>");
+        sb.AppendLine($"        ///     {summaryName} 的 Fluent Builder（链式调用）");
+        sb.AppendLine("        /// </summary>");
+        sb.AppendLine($"public static partial class {builderClassName}");
+        sb.AppendLine("{");
+
+        for (var i = 0; i < nodes.Count; i++)
+        {
+            var node = nodes[i];
+            GenerateFluentBuilderMethod(sb, node, containerShortName, "    ");
+            if (i < nodes.Count - 1) sb.AppendLine();
+        }
+
+        sb.AppendLine("}");
+
+        context.AddSource($"{builderClassName}.g.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
+    }
+
+    private void GenerateDialectFluentBuilder(GeneratorExecutionContext context, List<NodeInfo> nodes)
+    {
+        var groupedByNamespace = nodes.GroupBy(n => n.TypeSymbol.ContainingNamespace.ToDisplayString());
+
+        foreach (var nsGroup in groupedByNamespace)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("// <auto-generated/>");
+            sb.AppendLine("using System.Collections.Generic;");
+            sb.AppendLine("using System.Collections.Immutable;");
+            sb.AppendLine("using Nyar.EGraph;");
+            sb.AppendLine("using Nyar.IR.Intent;");
+            sb.AppendLine();
+
+            sb.AppendLine($"namespace {nsGroup.Key};");
+            sb.AppendLine();
+
+            var dialectName = nsGroup.Key.Split('.').Last();
+            sb.AppendLine("            /// <summary>");
+            sb.AppendLine($"            ///     {dialectName} 方言节点的 Fluent Builder（链式调用）");
+            sb.AppendLine("            /// </summary>");
+            sb.AppendLine($"public static partial class {dialectName}FluentBuilder");
+            sb.AppendLine("{");
+
+            var nodeLists = nsGroup.ToList();
+            for (var i = 0; i < nodeLists.Count; i++)
+            {
+                var node = nodeLists[i];
+                GenerateFluentBuilderMethod(sb, node, dialectName, "    ");
+                if (i < nodeLists.Count - 1) sb.AppendLine();
+            }
+
+            sb.AppendLine("}");
+
+            var fileName = nsGroup.Key.Replace('.', '_') + ".FluentBuilder.g.cs";
+            context.AddSource(fileName, SourceText.From(sb.ToString(), Encoding.UTF8));
+        }
+    }
+
+    private static void GenerateFluentBuilderMethod(StringBuilder sb, NodeInfo node, string dialectPrefix,
+        string indent)
+    {
+        var typeName = node.TypeSymbol.Name;
+
+        var returnType = node.ContainerFullName is not null
+            ? $"{GetBaseTypeName(node)}.{typeName}"
+            : typeName;
+
+        var parameters = node.Parameters;
+
+        if (parameters.Count == 0)
+        {
+            sb.AppendLine($"{indent}/// <summary>");
+            sb.AppendLine($"{indent}/// 创建 {typeName} 节点（无参数）");
+            sb.AppendLine($"{indent}/// </summary>");
+            sb.AppendLine($"{indent}public static {returnType} {typeName}() => new();");
+            return;
+        }
+
+        var dataParams = parameters.Where(p => !p.IsChild).ToList();
+        var childParams = parameters.Where(p => p.IsChild).ToList();
+        var requiredParams = parameters.Where(p => !p.HasDefaultValue).ToList();
+        if (requiredParams.Count == 0)
+        {
+            sb.AppendLine($"{indent}/// <summary>");
+            sb.AppendLine($"{indent}/// 创建 {typeName} 节点（链式调用）");
+            sb.AppendLine($"{indent}/// </summary>");
+            sb.AppendLine($"{indent}public static {returnType} {typeName}() => new();");
+            return;
+        }
+
+        var paramList = new List<string>();
+        var argList = new List<string>();
+
+        foreach (var p in requiredParams)
+        {
+            var paramType = GetShortType(p.TypeDisplay, true);
+            paramList.Add($"{paramType} {p.Name}");
+            argList.Add(p.Name);
+        }
+
+        sb.AppendLine($"{indent}/// <summary>");
+        sb.AppendLine($"{indent}/// 创建 {typeName} 节点（链式调用，必填参数）");
+        sb.AppendLine($"{indent}/// </summary>");
+        sb.AppendLine(
+            $"{indent}public static {returnType} {typeName}({string.Join(", ", paramList)}) => new({string.Join(", ", argList)});");
+        if (parameters.Any(p => p.HasDefaultValue))
+        {
+            var fullParamList = new List<string>();
+            var fullArgList = new List<string>();
+
+            foreach (var p in parameters)
+            {
+                var paramType = GetShortType(p.TypeDisplay, true);
+                var paramStr = $"{paramType} {p.Name}";
+                if (p.HasDefaultValue && p.DefaultValueExpression is not null)
+                    paramStr += $" = {p.DefaultValueExpression}";
+
+                fullParamList.Add(paramStr);
+                fullArgList.Add(p.Name);
+            }
+
+            sb.AppendLine();
+            sb.AppendLine($"{indent}/// <summary>");
+            sb.AppendLine($"{indent}/// 创建 {typeName} 节点（完整参数）");
+            sb.AppendLine($"{indent}/// </summary>");
+            sb.AppendLine(
+                $"{indent}public static {returnType} {typeName}Full({string.Join(", ", fullParamList)}) => new({string.Join(", ", fullArgList)});");
+        }
+    }
+
+    #endregion
+
+    #region Matcher 生成
+
+    private void GenerateNestedMatcher(GeneratorExecutionContext context, List<NodeInfo> nodes,
+        string containerShortName)
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine("// <auto-generated/>");
+        sb.AppendLine("using System;");
+        sb.AppendLine("using Nyar.IR.Intent;");
+        sb.AppendLine();
+
+        var ns = nodes[0].TypeSymbol.ContainingNamespace.ToDisplayString();
+        sb.AppendLine($"namespace {ns};");
+        sb.AppendLine();
+
+        var matcherClassName = containerShortName == "AlgebraNode" ? "AlgebraNodeMatcher" : "PhysicalNodeMatcher";
+        var summaryName = containerShortName == "AlgebraNode" ? "AlgebraNode 核心节点" : "PhysicalNode 节点";
+        sb.AppendLine("    /// <summary>");
+        sb.AppendLine($"    ///     {summaryName} 的模式匹配扩展方法");
+        sb.AppendLine("    /// </summary>");
+        sb.AppendLine($"public static class {matcherClassName}");
+        sb.AppendLine("{");
+
+        for (var i = 0; i < nodes.Count; i++)
+        {
+            var node = nodes[i];
+            GenerateMatchMethod(sb, node, containerShortName, "    ");
+            if (i < nodes.Count - 1) sb.AppendLine();
+        }
+
+        sb.AppendLine("}");
+
+        context.AddSource($"{matcherClassName}.g.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
+    }
+
+    private void GenerateDialectMatcher(GeneratorExecutionContext context, List<NodeInfo> nodes)
+    {
+        var groupedByNamespace = nodes.GroupBy(n => n.TypeSymbol.ContainingNamespace.ToDisplayString());
+
+        foreach (var nsGroup in groupedByNamespace)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("// <auto-generated/>");
+            sb.AppendLine("using System;");
+            sb.AppendLine("using Nyar.IR.Intent;");
+            sb.AppendLine();
+
+            sb.AppendLine($"namespace {nsGroup.Key};");
+            sb.AppendLine();
+
+            var dialectName = nsGroup.Key.Split('.').Last();
+            var nodeLists = nsGroup.ToList();
+            var baseType = nodeLists[0].IsPhysicalNode ? "PhysicalNode" : "AlgebraNode";
+
+            sb.AppendLine("        /// <summary>");
+            sb.AppendLine($"        ///     {dialectName} 方言节点的模式匹配扩展方法");
+            sb.AppendLine("        /// </summary>");
+            sb.AppendLine($"public static class {dialectName}Matcher");
+            sb.AppendLine("{");
+
+            for (var i = 0; i < nodeLists.Count; i++)
+            {
+                var node = nodeLists[i];
+                GenerateMatchMethod(sb, node, baseType, "    ");
+                if (i < nodeLists.Count - 1) sb.AppendLine();
+            }
+
+            sb.AppendLine("}");
+
+            var fileName = nsGroup.Key.Replace('.', '_') + ".Matcher.g.cs";
+            context.AddSource(fileName, SourceText.From(sb.ToString(), Encoding.UTF8));
+        }
+    }
+
+    private static void GenerateMatchMethod(StringBuilder sb, NodeInfo node, string baseType, string indent)
+    {
+        var typeName = node.TypeSymbol.Name;
+
+        var fullType = node.ContainerFullName is not null
+            ? $"{GetBaseTypeName(node)}.{typeName}"
+            : typeName;
+
+        sb.AppendLine($"{indent}/// <summary>");
+        sb.AppendLine($"{indent}/// 尝试将 {baseType} 节点匹配为 {typeName}，成功时执行处理函数");
+        sb.AppendLine($"{indent}/// </summary>");
+        sb.AppendLine($"{indent}public static bool Match{typeName}(this {baseType} node, Action<{fullType}> handler)");
+        sb.AppendLine($"{indent}{{");
+        sb.AppendLine($"{indent}    if (node is {fullType} matched)");
+        sb.AppendLine($"{indent}    {{");
+        sb.AppendLine($"{indent}        handler(matched);");
+        sb.AppendLine($"{indent}        return true;");
+        sb.AppendLine($"{indent}    }}");
+        sb.AppendLine($"{indent}    return false;");
+        sb.AppendLine($"{indent}}}");
+        sb.AppendLine();
+        sb.AppendLine($"{indent}/// <summary>");
+        sb.AppendLine($"{indent}/// 尝试将 {baseType} 节点匹配为 {typeName}，成功时返回转换结果");
+        sb.AppendLine($"{indent}/// </summary>");
+        sb.AppendLine(
+            $"{indent}public static TResult? Match{typeName}<TResult>(this {baseType} node, Func<{fullType}, TResult> handler)");
+        sb.AppendLine($"{indent}{{");
+        sb.AppendLine($"{indent}    return node is {fullType} matched ? handler(matched) : default;");
+        sb.AppendLine($"{indent}}}");
+    }
+
+    #endregion
+}

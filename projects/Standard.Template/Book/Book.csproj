@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <RootNamespace>Std.Template.Book</RootNamespace>
+        <AssemblyName>Sonic.Standard.Template.Book</AssemblyName>
+        <PackageId>Sonic.Standard.Template.Book</PackageId>
+        <Version>0.1.0</Version>
+        <Authors>NyarVM</Authors>
+        <Description>书籍/手册生成器</Description>
+        <PackageProjectUrl>https://github.com/nyar-vm/DejavuEngine</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/nyar-vm/DejavuEngine</RepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageTags>template;book</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Sonic.Standard.Data.Text\Sonic.Standard.Data.Text.csproj"/>
+        <ProjectReference Include="..\Dejavu\Dejavu.csproj"/>
+        <ProjectReference Include="..\Sonic.Standard.Template.csproj"/>
+    </ItemGroup>
+
+    <!-- 排除引用未实现类型（Std.Data.Text.DejaVu/MarkdownRenderer）的文件 -->
+    <ItemGroup>
+        <Compile Remove="BookGenerator.cs"/>
+    </ItemGroup>
+
+</Project>

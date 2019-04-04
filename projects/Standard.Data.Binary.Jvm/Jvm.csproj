@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <PackageId>Sonic.Standard.Data.Binary.Jvm</PackageId>
+        <RootNamespace>Std.Data.Binary.Jvm</RootNamespace>
+        <AssemblyName>Sonic.Standard.Data.Binary.Jvm</AssemblyName>
+        <Authors>Nyar Team - Acorn Group</Authors>
+        <Description>JVM 二进制编解码 — .class 文件格式</Description>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Standard.Data.Binary\Standard.Data.Binary.csproj" />
+    </ItemGroup>
+</Project>

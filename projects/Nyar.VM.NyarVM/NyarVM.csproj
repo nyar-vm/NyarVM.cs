@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <PackageId>Nyar.VM.NyarVM</PackageId>
+        <RootNamespace>Nyar.VM.NyarVM</RootNamespace>
+        <AssemblyName>Nyar.VM.NyarVM</AssemblyName>
+        <Authors>Nyar Team</Authors>
+        <Description>Nyar bytecode VM implementation based on Standard dialect</Description>
+        <PackageTags>nyar vm runtime standard</PackageTags>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Nyar\Nyar.csproj"/>
+        <ProjectReference Include="..\Standard.Data.Binary\Standard.Data.Binary.csproj" />
+        <ProjectReference Include="..\Standard.Data.Binary.NyarIR\Standard.Data.Binary.NyarIR.csproj" />
+        <ProjectReference Include="..\Sonic.Standard\Sonic.Standard.csproj"/>
+    </ItemGroup>
+</Project>

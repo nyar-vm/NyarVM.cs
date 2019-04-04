@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
+    <RootNamespace>Hermes.Plugin.GGScript</RootNamespace>
+    <AssemblyName>Hermes.Plugin.GGScript</AssemblyName>
+        <Authors>NyarVM</Authors>
+    <Description>Hermes GGScript 实体代码生成器</Description>
+              <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+    <ItemGroup>
+    <ProjectReference Include="..\..\Sonic.Standard.Schema.csproj"/>
+    <ProjectReference Include="..\..\..\Nyar\Nyar.csproj"/>
+  </ItemGroup>
+</Project>

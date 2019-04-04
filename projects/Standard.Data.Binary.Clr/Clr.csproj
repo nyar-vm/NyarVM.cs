@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <PackageId>Sonic.Standard.Data.Binary.Clr</PackageId>
+        <RootNamespace>Std.Data.Binary.Clr</RootNamespace>
+        <AssemblyName>Sonic.Standard.Data.Binary.Clr</AssemblyName>
+        <Authors>Nyar Team - Acorn Group</Authors>
+        <Description>CLR (.NET) 二进制编解码 — MSIL/CIL 指令与元数据表</Description>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Standard.Data.Binary\Standard.Data.Binary.csproj" />
+    </ItemGroup>
+</Project>

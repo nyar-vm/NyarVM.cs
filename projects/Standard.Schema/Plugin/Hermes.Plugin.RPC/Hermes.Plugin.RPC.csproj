@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
+    <RootNamespace>Hermes.Plugin.RPC</RootNamespace>
+    <AssemblyName>Hermes.Plugin.RPC</AssemblyName>
+    <PackageId>Hermes.Plugin.RPC</PackageId>
+        <Authors>NyarVM</Authors>
+    <Description>Hermes RPC 代码生成插件</Description>
+        <PackageTags>hermes;rpc;plugin;code-generation</PackageTags>
+          <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+    <ItemGroup>
+    <ProjectReference Include="..\..\Sonic.Standard.Schema.csproj"/>
+    <ProjectReference Include="..\..\..\Nyar\Nyar.csproj"/>
+  </ItemGroup>
+</Project>

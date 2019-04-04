@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
+    <RootNamespace>Hermes.Plugin.RPC.Tests</RootNamespace>
+    <AssemblyName>Hermes.Plugin.RPC.Tests</AssemblyName>
+    <PackageId>Hermes.Plugin.RPC.Tests</PackageId>
+        <Authors>NyarVM</Authors>
+    <Description>Hermes RPC 生成器测试</Description>
+        <IsPackable>false</IsPackable>
+          <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
+    <PackageReference Include="xunit" Version="2.9.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.9.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hermes.Plugin.RPC\Hermes.Plugin.RPC.csproj" />
+  </ItemGroup>
+</Project>

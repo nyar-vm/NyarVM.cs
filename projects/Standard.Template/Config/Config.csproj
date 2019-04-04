@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <RootNamespace>Std.Template.Config</RootNamespace>
+        <AssemblyName>Sonic.Standard.Template.Config</AssemblyName>
+        <PackageId>Sonic.Standard.Template.Config</PackageId>
+        <Version>0.1.0</Version>
+        <Authors>NyarVM</Authors>
+        <Description>配置文件渲染器</Description>
+        <PackageProjectUrl>https://github.com/nyar-vm/DejavuEngine</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/nyar-vm/DejavuEngine</RepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageTags>template;config</PackageTags>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Dejavu\Dejavu.csproj"/>
+    </ItemGroup>
+
+
+  <ItemGroup>
+        <Compile Remove="ConfigRenderer.cs"/>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <RootNamespace>Nargo.Cli</RootNamespace>
+        <AssemblyName>nargo</AssemblyName>
+        <Authors>Nyar Team</Authors>
+        <Description>nargo — Node / Web 工程统一支配工具</Description>
+        <OutputType>Exe</OutputType>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\projects\Nyar.Language\Nyar.Language.csproj" />
+        <ProjectReference Include="..\..\projects\Nyar.PackageRegistry\Nyar.PackageRegistry.csproj" />
+        <ProjectReference Include="..\..\projects\Nyar.PackageManager\Nyar.PackageManager.csproj" />
+        <ProjectReference Include="..\..\projects\Sonic.Standard\Sonic.Standard.csproj" />
+        <ProjectReference Include="..\..\projects\Sonic.Standard.Command\Sonic.Standard.Command.csproj" />
+    </ItemGroup>
+</Project>

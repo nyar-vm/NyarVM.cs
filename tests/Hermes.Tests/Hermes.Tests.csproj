@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.*"/>
+        <PackageReference Include="xunit" Version="2.*"/>
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.*"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\projects\Sonic.Standard.Schema\Sonic.Standard.Schema.csproj" />
+        <ProjectReference Include="..\..\projects\Sonic.Standard.Schema\Plugin\Hermes.Plugin.CSharp\Hermes.Plugin.CSharp.csproj"/>
+        <ProjectReference Include="..\..\projects\Sonic.Standard.Schema\Plugin\Hermes.Plugin.Sql\Hermes.Plugin.Sql.csproj"/>
+        <ProjectReference Include="..\..\projects\Sonic.Standard.Schema\Plugin\Hermes.Plugin.TypeScript\Hermes.Plugin.TypeScript.csproj"/>
+    </ItemGroup>
+</Project>

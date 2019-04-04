@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RootNamespace>Nyar.Binary.Gif</RootNamespace>
+    <AssemblyName>Nyar.Binary.Gif</AssemblyName>
+    <PackageId>Nyar.Binary.Gif</PackageId>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sonic.Standard.Data.Binary.csproj" />
+    <ProjectReference Include="..\..\Nyar\Nyar.csproj" />
+  </ItemGroup>
+</Project>

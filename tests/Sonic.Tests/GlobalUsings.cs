@@ -1,0 +1,13 @@
+global using Sonic.Command.Builder;
+global using Sonic.Command.Completion;
+global using Sonic.Command.Help;
+global using Sonic.Command.Metadata;
+global using Sonic.Interactive;
+global using Sonic.Terminal.Controls;
+global using Xunit;
+global using ArgumentAttribute = Core.Command.Argument.ArgumentAttribute;
+global using Color = Sonic.Terminal.RgbColor;
+global using CommandAttribute = Core.Command.CommandAttribute;
+global using ICommand = Core.Terminal.ICommand;
+global using OptionAttribute = Core.Command.Option.OptionAttribute;
+global using SubcommandAttribute = Core.Command.SubcommandAttribute;

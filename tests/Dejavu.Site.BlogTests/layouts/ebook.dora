@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= page.title %> - <%= site.title %></title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "Noto Serif CJK SC", "SimSun", "Songti SC", Georgia, serif;
+            font-size: 1em;
+            line-height: 1.8;
+            color: #222;
+            max-width: 100%;
+            margin: 0;
+            padding: 0 0.5em;
+            word-break: break-word;
+            text-justify: inter-ideograph;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: "Noto Sans CJK SC", "SimHei", "Heiti SC", sans-serif;
+            line-height: 1.4;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            page-break-after: avoid;
+        }
+        h1 { font-size: 1.6em; text-align: center; margin-top: 0.5em; }
+        h2 { font-size: 1.3em; border-bottom: 1px solid #ddd; padding-bottom: 0.2em; }
+        h3 { font-size: 1.1em; }
+        p { margin: 0.6em 0; text-indent: 2em; }
+        p.no-indent { text-indent: 0; }
+        a { color: #2a5db0; text-decoration: none; }
+        a[href^="#"] { color: inherit; }
+        pre, code {
+            font-family: "Cascadia Code", "Fira Code", "Consolas", "Courier New", monospace;
+            font-size: 0.85em;
+        }
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e0e0e0;
+            padding: 0.8em;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0.8em 0;
+            text-indent: 0;
+        }
+        code {
+            background: #f5f5f5;
+            padding: 0.1em 0.3em;
+            border-radius: 2px;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        blockquote {
+            border-left: 3px solid #aaa;
+            margin: 1em 0;
+            padding: 0.3em 1em;
+            color: #555;
+            background: #fafafa;
+            text-indent: 0;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1em 0;
+            font-size: 0.9em;
+            text-indent: 0;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 0.4em 0.6em;
+            text-align: left;
+        }
+        th { background: #f0f0f0; font-weight: bold; }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin: 1em auto;
+            display: block;
+        }
+        ul, ol {
+            padding-left: 1.5em;
+            margin: 0.6em 0;
+        }
+        ul { text-indent: 0; }
+        ol { text-indent: 0; }
+        li { margin: 0.2em 0; }
+        hr { border: none; border-top: 1px solid #ddd; margin: 1.5em 0; }
+        .footnote { font-size: 0.85em; color: #666; }
+
+        <% if page.toc and #page.toc > 0 then %>
+        .toc {
+            margin: 1.5em 0;
+            padding: 1em;
+            background: #f8f8f8;
+            border: 1px solid #e0e0e0;
+        }
+        .toc h2 { margin-top: 0; border-bottom: none; }
+        .toc ul { list-style: none; padding-left: 0; }
+        .toc ul ul { padding-left: 1em; }
+        <% end %>
+    </style>
+</head>
+<body>
+    <%= page.content %>
+</body>
+</html>

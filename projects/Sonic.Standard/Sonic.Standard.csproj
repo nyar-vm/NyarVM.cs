@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>false</ImplicitUsings>
+        <DisableImplicitFrameworkReferences>false</DisableImplicitFrameworkReferences>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <PackageId>Sonic.Standard</PackageId>
+        <RootNamespace>Std</RootNamespace>
+        <Description>Sonic standard library runtime and source generators.</Description>
+        <Authors>Sonic Team</Authors>
+        <Company>Sonic</Company>
+        <Product>Sonic</Product>
+        <PackageTags>sonic;adt;option;result;collections;source-generator</PackageTags>
+        <PackageProjectUrl>https://github.com/oovm/Sonic.cs</PackageProjectUrl>
+        <IsPackable>true</IsPackable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageOutputPath>..\..\packages</PackageOutputPath>
+        <IncludeBuildOutput>true</IncludeBuildOutput>
+        <SuppressDependenciesWhenPacking>false</SuppressDependenciesWhenPacking>
+        <PackageReadmeFile>readme.md</PackageReadmeFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="readme.md" Pack="true" PackagePath=""/>
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="LightDB.Tests"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.0"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Sonic.Core\Sonic.Core.csproj"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Remove="Interactive\**\*.cs"/>
+        <Compile Remove="Interactive\**\*.g.cs"/>
+    </ItemGroup>
+</Project>

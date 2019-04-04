@@ -1,0 +1,107 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+        <RootNamespace>Nyar</RootNamespace>
+        <PackageId>Nyar</PackageId>
+        <Authors>Nyar Team</Authors>
+        <Description>Nyar runtime platform with VM, GC and runtime environment</Description>
+        <PackageTags>nyar vm runtime gc</PackageTags>
+        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Sonic.Standard\Sonic.Standard.csproj"/>
+        <ProjectReference Include="..\Standard.Data.Text\Sonic.Standard.Data.Text.csproj"/>
+        <ProjectReference Include="..\Standard.Data.Binary\Standard.Data.Binary.csproj"/>
+        <ProjectReference Include="..\Standard.Data.Binary.Clr\Clr.csproj"/>
+        <ProjectReference Include="..\Standard.Data.Binary.Jvm\Jvm.csproj"/>
+        <ProjectReference Include="..\Standard.Data.Binary.Wasm\Wasm.csproj"/>
+        <ProjectReference Include="..\Standard.Data.Binary.NyarIR\Standard.Data.Binary.NyarIR.csproj"/>
+        <ProjectReference Include="..\Nyar.SourceGenerator\Nyar.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="Nyar.Tests"/>
+        <InternalsVisibleTo Include="NyarVM"/>
+    </ItemGroup>
+
+    <!-- 方言定义源文件（位于独立目录，通过链接包含） -->
+    <ItemGroup>
+        <Compile Include="..\Nyar.Dialect\CompositeDialect.cs" Link="Dialect\CompositeDialect.cs"/>
+        <Compile Include="..\Nyar.Dialect\DeclarationSemantics.cs" Link="Dialect\DeclarationSemantics.cs"/>
+        <Compile Include="..\Nyar.Dialect\DialectRegistry.cs" Link="Dialect\DialectRegistry.cs"/>
+        <Compile Include="..\Nyar.Dialect.Core\**\*.cs" Link="Dialect\Core\%(RecursiveDir)%(Filename)%(Extension)"/>
+        <Compile Include="..\Nyar.Dialect.Standard\**\*.cs" Link="Dialect\Standard\%(RecursiveDir)%(Filename)%(Extension)"/>
+    </ItemGroup>
+
+    <!-- 排除引用未实现类型的文件；OA 重构中，方言规则均暂不可用 -->
+    <ItemGroup>
+        <Compile Remove="Analyzer\Lint\ILintRule.cs"/>
+        <Compile Remove="Analyzer\Lint\LintEngine.cs"/>
+        <Compile Remove="PartialEvaluate\PartialEvaluator.cs"/>
+        <Compile Remove="IR\Extractor\DefaultCostModel.cs"/>
+        <Compile Remove="IR\Extractor\TopKExtractor.cs"/>
+        <Compile Remove="Optimizer\CostModels\DefaultCostModel.cs"/>
+        <Compile Remove="Optimizer\CostModels\WasmSizeCostModel.cs"/>
+        <Compile Remove="PartialEvaluate\ConstantValue.cs"/>
+        <Compile Remove="PartialEvaluate\SpecializationCache.cs"/>
+        <!-- OA 重构中：Nyar.Dialect.Core.Nodes 和 Nyar.Dialect.Standard.Nodes 命名空间已移除，
+             引用这些命名空间的文件暂时排除编译 -->
+        <Compile Remove="..\Nyar.Dialect\DeclarationSemantics.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\AddNegToSubRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\AdvancedDeadCodeEliminationRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\BooleanIdentityRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\BooleanSimplificationRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\CmpConstantRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\CmpNegateRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\CmpSelfRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\CmpSymmetryRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\CmpWithZeroRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\CommonSubexpressionEliminationRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\ConstantFoldingRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\CopyPropagationRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\DeadCodeEliminationRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\DeMorganRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\DivDistributiveRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\DivNegRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\DivSelfRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\FilterStrategyIntroductionRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\FloatConstantFoldingRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\IdentityRules.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\MapReduceFusionDiscoveryRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\MapStrategyIntroductionRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\MulIdentityRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\MulNegNegRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\MulNegRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\NegDistributiveRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\NegNegEliminationRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\NegSubRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\ReduceStrategyIntroductionRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\RemSelfRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\SubSelfRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\SubToNegAddRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Rules\SubZeroRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Cost\CoreCostHook.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Core\Analysis\IKunTypeAnalysis.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Standard\Rules\ArrayLengthRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Standard\Rules\SliceEmptyRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Standard\Rules\Utf8CompareRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Standard\Rules\Utf8ConcatRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Standard\Rules\Utf8LenRule.cs"/>
+        <Compile Remove="..\Nyar.Dialect.Standard\PartialEvaluate\**\*.cs"/>
+        <!-- OA 重构中：Literal<T> 等强类型节点由源生成器 GenerateNodes 产生，已禁用；EGraphExtensions 依赖这些类型 -->
+        <Compile Remove="EGraph\EGraphExtensions.cs"/>
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="..\Nyar.Dialect.Standard\Rules\">
+        <Link>Dialect\Standard\Rules</Link>
+      </Folder>
+    </ItemGroup>
+</Project>

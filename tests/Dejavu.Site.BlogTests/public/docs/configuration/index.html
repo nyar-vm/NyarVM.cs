@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>站点配置 - My DejaVu Site</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <a href="/">My DejaVu Site</a>
+        </div>
+        <div class="navbar-menu">
+            
+            <a href="/" class="navbar-item">首页</a>
+            
+            <a href="/docs/guide/getting-started/" class="navbar-item">用户文档</a>
+            
+            <a href="/docs/api/overview/" class="navbar-item">API 文档</a>
+            
+            <a href="/posts/" class="navbar-item">文章</a>
+            
+            <a href="/about/" class="navbar-item">关于</a>
+            
+        </div>
+        <div class="navbar-actions">
+            <div class="lang-switcher">
+                <button class="lang-btn" id="langToggle">
+                    <span class="lang-icon">🌐</span>
+                    <span class="lang-label" data-i18n="language">语言</span>
+                    <span class="lang-arrow">▾</span>
+                </button>
+                <div class="lang-dropdown" id="langDropdown">
+                    <a href="#" class="lang-option" data-lang="zh-CN">中文</a>
+                    <a href="#" class="lang-option" data-lang="en">English</a>
+                </div>
+            </div>
+            <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+        </div>
+    </nav>
+
+    <div class="layout">
+        <main class="content">
+            
+<div class="guide-doc">
+    <div class="guide-doc-header">
+        <h1>站点配置</h1>
+    </div>
+    <div class="guide-doc-body">
+        <nav class="guide-doc-sidebar">
+            
+        </nav>
+        <main class="guide-doc-content">
+            <h2 id="站点配置"> 站点配置</h2>
+<p>DejaVu 使用 VON 格式的 <code>config.von</code> 文件配置站点。 </p>
+<h3 id="基本配置"> 基本配置</h3>
+<pre><code>{
+  title: &quot;站点标题&quot;,
+  description: &quot;站点描述&quot;,
+  author: &quot;作者&quot;,
+  language: &quot;zh-CN&quot;,
+  baseUrl: &quot;/&quot;
+}</code></pre>
+<h3 id="导航配置"> 导航配置</h3>
+<pre><code>{
+  navigation: [
+    
+{&quot;首页&quot;: &quot;/&quot;},
+    
+{&quot;文章&quot;: &quot;/posts/&quot;},
+    
+{&quot;关于&quot;: &quot;/about/&quot;}
+  
+}</code></pre>
+<h3 id="侧边栏配置"> 侧边栏配置</h3>
+<pre><code>{
+  sidebar: [
+    
+{&quot;最近文章&quot;: &quot;/posts/&quot;},
+    
+{&quot;标签&quot;: &quot;/tags/&quot;}
+  
+}</code></pre>
+<h3 id="多语言配置"> 多语言配置</h3>
+<pre><code>{
+  language: &quot;zh-CN&quot;,
+  languages: {
+    
+&quot;zh-CN&quot;: {
+      
+home: &quot;首页&quot;,
+      
+posts: &quot;文章&quot;
+    
+},
+    
+en: {
+      
+home: &quot;Home&quot;,
+      
+posts: &quot;Posts&quot;
+    
+}
+  }
+}</code></pre>
+<p>切换语言时，所有 <code>data-i18n</code> 标记的元素会自动翻译。 </p>
+<h3 id="内容配置"> 内容配置</h3>
+<table>
+<thead>
+<tr>
+<th>字段 | 类型 | 默认值 | 说明 |</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>paginate</code> | 整数 | 10 | 每页文章数 |</td>
+</tr>
+<tr>
+<td><code>permalink</code> | 字符串 | <code>/:section/:slug/</code> | 永久链接模式 |</td>
+</tr>
+<tr>
+<td><code>includeDrafts</code> | 布尔 | false | 是否包含草稿 |</td>
+</tr>
+<tr>
+<td><code>defaultLayout</code> | 字符串 | <code>default</code> | 默认布局名称 |</td>
+</tr>
+</tbody>
+</table>
+<h3 id="永久链接模式"> 永久链接模式</h3>
+<table>
+<thead>
+<tr>
+<th>支持以下占位符：</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>---|:---|</td>
+</tr>
+<tr>
+<td><code>section</code> | 内容分区 |</td>
+</tr>
+<tr>
+<td><code>slug</code> | 文章别名 |</td>
+</tr>
+<tr>
+<td><code>year</code> | 年份 |</td>
+</tr>
+<tr>
+<td><code>month</code> | 月份 |</td>
+</tr>
+<tr>
+<td><code>day</code> | 日期 |</td>
+</tr>
+<tr>
+<td><code>title</code> | 标题别名 |</td>
+</tr>
+<tr>
+<td>示例：<code>/:year/:month/:slug/</code> → <code>/2026/01/my-post/</code></td>
+</tr>
+</tbody>
+</table>
+
+            <div class="guide-nav-footer">
+                
+                
+            </div>
+        </main>
+        <aside class="guide-doc-toc">
+            <h4 data-i18n="tableOfContents">目录</h4>
+            <ul class="guide-toc-list">
+                
+                <li class="guide-toc-item guide-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+                <li class="guide-toc-item guide-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+                <li class="guide-toc-item guide-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+                <li class="guide-toc-item guide-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+                <li class="guide-toc-item guide-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+                <li class="guide-toc-item guide-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+                <li class="guide-toc-item guide-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+            </ul>
+        </aside>
+    </div>
+</div>
+
+        </main>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+                <h3 data-i18n="recentPosts">最近文章</h3>
+                <ul class="sidebar-nav">
+                    
+                    <li><a href="/posts/">最近文章</a></li>
+                    
+                    <li><a href="/tags/">标签</a></li>
+                    
+                    <li><a href="/categories/">分类</a></li>
+                    
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <h3 data-i18n="tags">标签</h3>
+                <div class="tag-cloud">
+                    
+                    <span class="tag">hello</span>
+                    
+                    <span class="tag">world</span>
+                    
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <footer>
+        <p>&copy; Anonymous · Built with DejaVu</p>
+    </footer>
+
+    <script src="/js/i18n.js"></script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <Description>VOA ToolChain - Valkyrie of Asgard 全栈框架命令行工具</Description>
+        <Authors>VOA Team</Authors>
+        <Version>0.0.3</Version>
+        <OutputType>Exe</OutputType>
+        <AssemblyName>voa</AssemblyName>
+        <RootNamespace>Asgard.CLI</RootNamespace>
+        <PublishAot>true</PublishAot>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\projects\Nyar.Language\Nyar.Language.csproj"/>
+        <ProjectReference Include="..\..\projects\Sonic.Standard\Sonic.Standard.csproj"/>
+        <ProjectReference Include="..\..\projects\Nyar\Nyar.csproj"/>
+        <ProjectReference Include="..\..\projects\Sonic.Standard.Command\Sonic.Standard.Command.csproj"/>
+        <ProjectReference Include="..\..\projects\Sonic.Standard.Data.Text\Sonic.Standard.Data.Text.csproj"/>
+        <ProjectReference Include="..\..\projects\Sonic.Standard.Data.Text.Valkyrie\Valkyrie.csproj"/>
+        <ProjectReference Include="..\..\projects\Sonic.Standard.Data.Text.Awsl\Awsl.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="..\..\projects\Nyar.Language\Awsl.Asgard\**\*.cs"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="..\..\projects\Nyar.Language\Awsl.Asgard\Runtime\voa-runtime.js">
+            <LogicalName>Nyar.Language.Awsl.Asgard.Runtime.voa-runtime.js</LogicalName>
+        </EmbeddedResource>
+    </ItemGroup>
+
+  <ItemGroup>
+        <Compile Remove="Compiler\AsgardMultiTargetBuilder.cs"/>
+        <Compile Remove="DevServer\AwslRenderer.cs"/>
+    </ItemGroup>
+</Project>

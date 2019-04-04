@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模板语法 - My DejaVu Site</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <a href="/">My DejaVu Site</a>
+        </div>
+        <div class="navbar-menu">
+            
+            <a href="/" class="navbar-item">首页</a>
+            
+            <a href="/docs/guide/getting-started/" class="navbar-item">用户文档</a>
+            
+            <a href="/docs/api/overview/" class="navbar-item">API 文档</a>
+            
+            <a href="/posts/" class="navbar-item">文章</a>
+            
+            <a href="/about/" class="navbar-item">关于</a>
+            
+        </div>
+        <div class="navbar-actions">
+            <div class="lang-switcher">
+                <button class="lang-btn" id="langToggle">
+                    <span class="lang-icon">🌐</span>
+                    <span class="lang-label" data-i18n="language">语言</span>
+                    <span class="lang-arrow">▾</span>
+                </button>
+                <div class="lang-dropdown" id="langDropdown">
+                    <a href="#" class="lang-option" data-lang="zh-CN">中文</a>
+                    <a href="#" class="lang-option" data-lang="en">English</a>
+                </div>
+            </div>
+            <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+        </div>
+    </nav>
+
+    <div class="layout">
+        <main class="content">
+            
+<div class="guide-doc">
+    <div class="guide-doc-header">
+        <h1>模板语法</h1>
+    </div>
+    <div class="guide-doc-body">
+        <nav class="guide-doc-sidebar">
+            
+        </nav>
+        <main class="guide-doc-content">
+            <h2 id="模板语法"> 模板语法</h2>
+<p>DejaVu 使用 <code>.dora</code> 模板文件，语法基于 <code>&lt;% %&gt;</code> 标签。 </p>
+<h3 id="变量输出"> 变量输出</h3>
+<p>使用 <code>&lt;% variable %&gt;</code> 输出变量： </p>
+<pre><code class="language-html">&lt;&gt;&lt;% page.title %&gt;&lt;/h1&gt;
+
+&lt;&gt;&lt;% site.description %&gt;&lt;/p&gt;</code></pre>
+<p>支持点号访问嵌套属性： </p>
+<pre><code class="language-html">&lt;&gt;
+&lt;% page.author.name %&gt;&lt;/span&gt;</code></pre>
+<h3 id="条件判断"> 条件判断</h3>
+<pre><code class="language-html">&lt;% if page.draft %&gt;
+  &lt; class=&quot;badge&quot;&gt;草稿&lt;/span&gt;
+&lt;% end if %&gt;</code></pre>
+<p><code>if-else</code> 结构： </p>
+<pre><code class="language-html">&lt;% if page.tags %&gt;
+  &lt; class=&quot;tags&quot;&gt;...&lt;/div&gt;
+&lt;% else %&gt;
+  &lt;&gt;暂无标签&lt;/p&gt;
+&lt;% end if %&gt;</code></pre>
+<h3 id="循环"> 循环</h3>
+<pre><code class="language-html">&lt;% loop posts %&gt;
+  &lt;&gt;
+    
+&lt;&gt;&lt;% item.title %&gt;&lt;/h2&gt;
+
+    
+&lt;&gt;&lt;% item.summary %&gt;&lt;/p&gt;
+
+  &lt;/&gt;
+&lt;% end loop %&gt;</code></pre>
+<p>循环中使用 <code>item</code> 引用当前迭代对象。 </p>
+<h3 id="模板继承"> 模板继承</h3>
+<p>定义基础布局： </p>
+<pre><code class="language-html">&lt;!-- layouts/default.dora --&gt;
+&lt;&gt;
+
+&lt;&gt;
+
+  &lt;% block content %&gt;
+  &lt;% end block %&gt;
+&lt;/&gt;
+
+&lt;/&gt;</code></pre>
+<p>子模板继承并填充： </p>
+<pre><code class="language-html">&lt;% extends 'layouts/default.dora' %&gt;
+&lt;% block content %&gt;
+  &lt;&gt;页面内容&lt;/h1&gt;
+&lt;% end block %&gt;</code></pre>
+<h3 id="模板包含"> 模板包含</h3>
+<pre><code class="language-html">&lt;% include 'partials/header.dora' %&gt;</code></pre>
+<h3 id="模式匹配"> 模式匹配</h3>
+<pre><code class="language-html">&lt;% match page.type %&gt;
+  &lt;% if &quot;article&quot; %&gt;
+    
+&lt;&gt;...&lt;/article&gt;
+
+  &lt;% end if %&gt;
+  &lt;% if &quot;page&quot; %&gt;
+    
+&lt; class=&quot;page&quot;&gt;...&lt;/div&gt;
+
+  &lt;% end if %&gt;
+&lt;% end match %&gt;</code></pre>
+<h3 id="注释"> 注释</h3>
+<pre><code class="language-html">&lt;%# 这是注释，不会输出 %&gt;</code></pre>
+
+            <div class="guide-nav-footer">
+                
+                
+            </div>
+        </main>
+        <aside class="guide-doc-toc">
+            <h4 data-i18n="tableOfContents">目录</h4>
+            <ul class="guide-toc-list">
+                
+                <li class="guide-toc-item guide-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+                <li class="guide-toc-item guide-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+                <li class="guide-toc-item guide-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+                <li class="guide-toc-item guide-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+                <li class="guide-toc-item guide-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+                <li class="guide-toc-item guide-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+                <li class="guide-toc-item guide-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+                <li class="guide-toc-item guide-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+            </ul>
+        </aside>
+    </div>
+</div>
+
+        </main>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+                <h3 data-i18n="recentPosts">最近文章</h3>
+                <ul class="sidebar-nav">
+                    
+                    <li><a href="/posts/">最近文章</a></li>
+                    
+                    <li><a href="/tags/">标签</a></li>
+                    
+                    <li><a href="/categories/">分类</a></li>
+                    
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <h3 data-i18n="tags">标签</h3>
+                <div class="tag-cloud">
+                    
+                    <span class="tag">hello</span>
+                    
+                    <span class="tag">world</span>
+                    
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <footer>
+        <p>&copy; Anonymous · Built with DejaVu</p>
+    </footer>
+
+    <script src="/js/i18n.js"></script>
+</body>
+</html>

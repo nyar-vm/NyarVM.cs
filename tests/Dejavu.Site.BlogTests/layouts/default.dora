@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="<% site.language %>">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><% page.title %> - <% site.title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <% if page.hreflangs %>
+    <% loop page.hreflangs %>
+    <link rel="alternate" hreflang="<% item.lang %>" href="<% item.url %>" />
+    <% end loop %>
+    <% end if %>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <a href="/"><% site.title %></a>
+        </div>
+        <div class="navbar-menu">
+            <% loop site.navigation %>
+            <a href="<% item.url %>" class="navbar-item"><% item.label %></a>
+            <% end loop %>
+        </div>
+        <div class="navbar-actions">
+            <% if page.languageLinks %>
+            <div class="lang-switcher">
+                <button class="lang-btn" id="langToggle">
+                    <span class="lang-icon">🌐</span>
+                    <span class="lang-label" data-i18n="language">语言</span>
+                    <span class="lang-arrow">▾</span>
+                </button>
+                <div class="lang-dropdown" id="langDropdown">
+                    <% loop page.languageLinks %>
+                    <a href="<% item.url %>" class="lang-option<% if item.active %> active<% end if %>" data-lang="<% item.code %>"><% item.label %></a>
+                    <% end loop %>
+                </div>
+            </div>
+            <% end if %>
+            <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+        </div>
+    </nav>
+
+    <div class="layout">
+        <main class="content">
+            <% block content %>
+            <% end block %>
+        </main>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+                <h3 data-i18n="recentPosts">最近文章</h3>
+                <ul class="sidebar-nav">
+                    <% loop site.sidebar %>
+                    <li><a href="<% item.url %>"><% item.label %></a></li>
+                    <% end loop %>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <h3 data-i18n="tags">标签</h3>
+                <div class="tag-cloud">
+                    <% loop tags %>
+                    <span class="tag"><% item %></span>
+                    <% end loop %>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <footer>
+        <p>&copy; <% site.author %> · Built with DejaVu</p>
+    </footer>
+
+    <script src="/js/i18n.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script src="/js/enhancements.js"></script>
+</body>
+</html>

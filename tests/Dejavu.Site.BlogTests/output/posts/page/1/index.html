@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My DejaVu Site - My DejaVu Site</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <a href="/">My DejaVu Site</a>
+        </div>
+        <div class="navbar-menu">
+            
+            <a href="/" class="navbar-item">首页</a>
+            
+            <a href="/docs/guide/getting-started/" class="navbar-item">用户文档</a>
+            
+            <a href="/docs/api/overview/" class="navbar-item">API 文档</a>
+            
+            <a href="/posts/" class="navbar-item">文章</a>
+            
+            <a href="/about/" class="navbar-item">关于</a>
+            
+        </div>
+        <div class="navbar-actions">
+            <div class="lang-switcher">
+                <button class="lang-btn" id="langToggle">
+                    <span class="lang-icon">🌐</span>
+                    <span class="lang-label" data-i18n="language">语言</span>
+                    <span class="lang-arrow">▾</span>
+                </button>
+                <div class="lang-dropdown" id="langDropdown">
+                    <a href="#" class="lang-option active" data-lang="zh-CN">中文</a>
+                    <a href="#" class="lang-option" data-lang="en">English</a>
+                </div>
+            </div>
+            <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+        </div>
+    </nav>
+
+    <div class="layout">
+        <main class="content">
+            
+<h2>My DejaVu Site</h2>
+<div class="posts">
+
+    <article>
+        <h3><a href="/docs/api/core/">DejaVu.Core 模块</a></h3>
+        <p>DejaVu.Core 核心渲染引擎，提供模板解析、变量求值和控制流执行。 类 DejavuRenderer 模板渲染器主类。 public class DejavuRenderer { public DejavuRenderer(); public string Render(string template, Dictionary&lt;string, object&gt; context); ...</p>
+        <time>2026-01-01</time>
+    </article>
+
+    <article>
+        <h3><a href="/docs/api/overview/">DejaVu API 概览</a></h3>
+        <p>API 概览 DejaVu 提供以下核心模块： ---|:---| Dejavu | 模板渲染引擎核心 | Dejavu.Template | 模板解析与执行 | Dejavu.Site | 静态站点生成器 | Dejavu.Markdown | Markdown 渲染 | Dejavu.Cli | 命令行工具 | 快速开始 using Dejavu; var renderer = new Dej...</p>
+        <time>2026-01-01</time>
+    </article>
+
+    <article>
+        <h3><a href="/docs/guide/getting-started/">快速开始</a></h3>
+        <p>快速开始 安装 通过 .NET CLI 安装 DejaVu： dotnet tool install --global DejavuEngine 或者作为项目依赖引用： dotnet add package DejavuEngine 创建第一个站点 初始化站点目录 dejavu site init my-site cd my-site 站点结构 初始化后的目录结构如下： my-site/ ├── ...</p>
+        <time>2026-01-01</time>
+    </article>
+
+    <article>
+        <h3><a href="/docs/guide/template-syntax/">模板语法</a></h3>
+        <p>模板语法 DejaVu 使用 .dora 模板文件，语法基于 &lt;% %&gt; 标签。 变量输出 使用 &lt;% variable %&gt; 输出变量： &lt;&gt;&lt;% page.title %&gt;&lt;/h1&gt; &lt;&gt;&lt;% site.description %&gt;&lt;/p&gt; 支持点号访问嵌套属性： &lt;&gt; &lt;% pa...</p>
+        <time>2026-01-01</time>
+    </article>
+
+    <article>
+        <h3><a href="/docs/guide/configuration/">站点配置</a></h3>
+        <p>站点配置 DejaVu 使用 VON 格式的 config.von 文件配置站点。 基本配置 { title: &quot;站点标题&quot;, description: &quot;站点描述&quot;, author: &quot;作者&quot;, language: &quot;zh-CN&quot;, baseUrl: &quot;/&quot; } 导航配置 { navigation...</p>
+        <time>2026-01-01</time>
+    </article>
+
+    <article>
+        <h3><a href="/posts/hello-world/">Hello World</a></h3>
+        <p>Hello World This is my first post using DejaVu! Features Fast rendering Easy to use Flexible templates</p>
+        <time>2024-01-01</time>
+    </article>
+
+</div>
+
+        </main>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+                <h3 data-i18n="recentPosts">最近文章</h3>
+                <ul class="sidebar-nav">
+                    
+                    <li><a href="/posts/">最近文章</a></li>
+                    
+                    <li><a href="/tags/">标签</a></li>
+                    
+                    <li><a href="/categories/">分类</a></li>
+                    
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <h3 data-i18n="tags">标签</h3>
+                <div class="tag-cloud">
+                    
+                    <span class="tag">hello</span>
+                    
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <footer>
+        <p>&copy; Anonymous · Built with DejaVu</p>
+    </footer>
+
+    <script src="/js/i18n.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script src="/js/enhancements.js"></script>
+</body>
+</html>

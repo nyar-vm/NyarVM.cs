@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <RootNamespace>Std.Template.Hbs</RootNamespace>
+        <AssemblyName>Sonic.Standard.Template.Hbs</AssemblyName>
+        <PackageId>Sonic.Standard.Template.Hbs</PackageId>
+        <Version>0.1.0</Version>
+        <Authors>NyarVM</Authors>
+        <Description>Handlebars 模板引擎实现</Description>
+        <PackageProjectUrl>https://github.com/nyar-vm/NyarVM</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/nyar-vm/NyarVM</RepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageTags>template;handlebars</PackageTags>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Sonic.Standard.Template.csproj"/>
+    </ItemGroup>
+</Project>

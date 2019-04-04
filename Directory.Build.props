@@ -1,0 +1,14 @@
+<Project>
+    <PropertyGroup>
+        <Version>0.0.0.1</Version>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/nyar-vm/NyarVM.cs</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+        <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)\.artifacts\obj\</BaseIntermediateOutputPath>
+        <MSBuildProjectExtensionsPath>$(BaseIntermediateOutputPath)</MSBuildProjectExtensionsPath>
+        <BaseOutputPath>$(MSBuildProjectDirectory)\.artifacts\bin\</BaseOutputPath>
+        <DefaultItemExcludes>$(DefaultItemExcludes);$(MSBuildProjectDirectory)\obj\**;$(MSBuildProjectDirectory)\bin\**;$(MSBuildProjectDirectory)\.artifacts\**</DefaultItemExcludes>
+    </PropertyGroup>
+</Project>

@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+        <RootNamespace>LightDB.Benchmarks</RootNamespace>
+        <OutputType>Exe</OutputType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Remove="Nyar\SymbolColdStartBenchmark.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="BenchmarkDotNet" Version="0.14.*"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\LightDB\LightDB.csproj"/>
+    </ItemGroup>
+
+</Project>

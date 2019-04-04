@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <title><%= page.title %> - <%= site.title %></title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm 2.5cm;
+            @bottom-center {
+                content: counter(page);
+                font-family: "Noto Sans CJK SC", sans-serif;
+                font-size: 9pt;
+                color: #999;
+            }
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: "Noto Serif CJK SC", "SimSun", "Songti SC", Georgia, serif;
+            font-size: 11pt;
+            line-height: 1.8;
+            color: #111;
+            margin: 0;
+            padding: 0;
+            word-break: break-word;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: "Noto Sans CJK SC", "SimHei", "Heiti SC", sans-serif;
+            line-height: 1.4;
+            margin-top: 1.2em;
+            margin-bottom: 0.4em;
+            page-break-after: avoid;
+        }
+        h1 { font-size: 18pt; text-align: center; }
+        h2 { font-size: 14pt; border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }
+        h3 { font-size: 12pt; }
+        p { margin: 0.5em 0; text-indent: 2em; }
+        p.no-indent { text-indent: 0; }
+        a { color: #2a5db0; text-decoration: none; }
+        a[href^="#"] { color: inherit; }
+        pre, code {
+            font-family: "Cascadia Code", "Consolas", "Courier New", monospace;
+            font-size: 8.5pt;
+        }
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            padding: 0.6em;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0.6em 0;
+            text-indent: 0;
+            page-break-inside: avoid;
+        }
+        code {
+            background: #f5f5f5;
+            padding: 0.1em 0.25em;
+            text-indent: 0;
+        }
+        pre code { background: none; padding: 0; }
+        blockquote {
+            border-left: 3px solid #999;
+            margin: 0.8em 0;
+            padding: 0.3em 0.8em;
+            color: #444;
+            text-indent: 0;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 0.8em 0;
+            font-size: 9.5pt;
+            text-indent: 0;
+            page-break-inside: avoid;
+        }
+        th, td {
+            border: 1px solid #bbb;
+            padding: 0.3em 0.5em;
+            text-align: left;
+        }
+        th { background: #eee; font-weight: bold; }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin: 0.8em auto;
+            display: block;
+        }
+        ul, ol { padding-left: 1.3em; margin: 0.4em 0; text-indent: 0; }
+        li { margin: 0.15em 0; }
+        hr { border: none; border-top: 1px solid #ccc; margin: 1.2em 0; }
+
+        .page-break { page-break-before: always; }
+        .chapter-title { page-break-before: always; margin-top: 3cm; }
+    </style>
+</head>
+<body>
+    <%= page.content %>
+</body>
+</html>

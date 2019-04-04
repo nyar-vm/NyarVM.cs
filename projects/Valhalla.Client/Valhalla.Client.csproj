@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Description>瓦尓哈拉客户端 SDK — API 调用封装、SHA-256 验证、安装逻辑</Description>
+        <Authors>Nyar Team</Authors>
+        <RootNamespace>Valhalla.Client</RootNamespace>
+        <AssemblyName>Valhalla.Client</AssemblyName>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\projects\language\Nyar.Language.Von\Nyar.Language.Von.csproj"/>
+        <ProjectReference Include="..\Valhalla\Valhalla.csproj"/>
+    </ItemGroup>
+
+</Project>

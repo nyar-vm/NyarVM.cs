@@ -1,0 +1,146 @@
+<Solution>
+    <Configurations>
+        <Platform Name="Any CPU" />
+        <Platform Name="x64" />
+        <Platform Name="x86" />
+    </Configurations>
+    <Folder Name="/Sonic/">
+        <Project Path="projects/SourceGenerator/SourceGenerator.csproj" />
+        <Project Path="projects/Core/Core.csproj" />
+        <Project Path="projects/Database/Database.csproj" />
+        <Project Path="projects/Plotter/Plotter.csproj" />
+        <Project Path="projects/Animator/Animator.csproj" />
+        <Project Path="projects/Standard.Audio/Standard.Audio.csproj" />
+        <Project Path="projects/Standard.Document/Standard.Document.csproj" />
+        <Project Path="projects/Standard.Image/Standard.Image.csproj" />
+        <Project Path="projects/Standard.Video/Standard.Video.csproj" />
+        <Project Path="projects/Standard/Standard.csproj" />
+        <Project Path="projects/Standard.Net/Standard.Net.csproj" />
+        <Project Path="projects/Standard.DL/Cluster/Galatea.Cluster.csproj" />
+        <Project Path="projects/Standard.Command/Standard.Command.csproj" />
+        <Project Path="projects/Standard.Compression/Standard.Compression.csproj" />
+        <Project Path="projects/SourceGenerator/Config/Config.SourceGenerator.csproj" />
+        <Project Path="projects/Standard.Schema/Standard.Schema.csproj" />
+        <Project Path="projects/Standard.Schema.ORM/Standard.Schema.ORM.csproj" />
+        <Project Path="projects/Standard.Terminal/Standard.Terminal.csproj" />
+    </Folder>
+    <Folder Name="/std.data.binary/">
+        <Project Path="projects/Standard.Data.Binary.Clr/Clr.csproj" />
+        <Project Path="projects/Standard.Data.Binary.Jvm/Jvm.csproj" />
+        <Project Path="projects/Standard.Data.Binary.Wasm/Wasm.csproj" />
+        <Project Path="projects/Standard.Data.Binary/BmFont/Nyar.Binary.BmFont.csproj" />
+        <Project Path="projects/Standard.Data.Binary/Bmp/Nyar.Binary.Bmp.csproj" />
+        <Project Path="projects/Standard.Data.Binary/Dds/Nyar.Binary.Dds.csproj" />
+        <Project Path="projects/Standard.Data.Binary/Dxil/Nyar.Binary.Dxil.csproj" />
+        <Project Path="projects/Standard.Data.Binary/Exr/Nyar.Binary.Exr.csproj" />
+        <Project Path="projects/Standard.Data.Binary/Fbx/Nyar.Binary.Fbx.csproj" />
+        <Project Path="projects/Standard.Data.Binary/Flac/Nyar.Binary.Flac.csproj" />
+        <Project Path="projects/Standard.Data.Binary/FlatBuffers/Nyar.Binary.FlatBuffers.csproj" />
+        <Project Path="projects/Standard.Data.Binary/Gltf/Nyar.Binary.Gltf.csproj" />
+        <Project Path="projects/Standard.Data.Binary/Jpeg/Nyar.Binary.Jpeg.csproj" />
+        <Project Path="projects/Standard.Data.Binary/Live2D/Nyar.Binary.Live2D.csproj" />
+        <Project Path="projects/Standard.Data.Binary/MessagePack/Nyar.Binary.MessagePack.csproj" />
+        <Project Path="projects/Standard.Data.Binary/MySQL/Nyar.Protocol.MySQL.csproj" />
+        <Project Path="projects/Standard.Data.Binary/Office/Nyar.Binary.Office.csproj" />
+        <Project Path="projects/Standard.Data.Binary/Ogg/Nyar.Binary.Ogg.csproj" />
+        <Project Path="projects/Standard.Data.Binary/Onnx/Nyar.Binary.Onnx.csproj" />
+        <Project Path="projects/Standard.Data.Binary/Opus/Nyar.Binary.Opus.csproj" />
+        <Project Path="projects/Standard.Data.Binary/Png/Nyar.Binary.Png.csproj" />
+        <Project Path="projects/Standard.Data.Binary/PostgreSQL/Nyar.Protocol.PostgreSQL.csproj" />
+        <Project Path="projects/Standard.Data.Binary/Protobuf/Nyar.Protocol.Protobuf.csproj" />
+        <Project Path="projects/Standard.Data.Binary/Psd/Nyar.Binary.Psd.csproj" />
+        <Project Path="projects/Standard.Data.Binary/Redis/Nyar.Protocol.Redis.csproj" />
+        <Project Path="projects/Standard.Data.Binary/SafeTensors/Nyar.Binary.SafeTensors.csproj" />
+        <Project Path="projects/Standard.Data.Binary/Spine/Nyar.Binary.Spine.csproj" />
+        <Project Path="projects/Standard.Data.Binary/Sqlite/Nyar.Binary.Sqlite.csproj" />
+        <Project Path="projects/Standard.Data.Binary/Tga/Nyar.Binary.Tga.csproj" />
+        <Project Path="projects/Standard.Data.Binary/Wav/Wav.csproj" />
+        <Project Path="projects/Standard.Data.Binary/Gif/Gif.csproj" />
+        <Project Path="projects/Standard.Data.Binary/ZeroMQ/Nyar.Protocol.ZeroMQ.csproj" />
+        <Project Path="projects/Standard.Data.Binary.NyarIR/Standard.Data.Binary.NyarIR.csproj" />
+        <Project Path="projects/Standard.Data.Binary/Standard.Data.Binary.csproj" />
+    </Folder>
+    <Folder Name="/std.data.text/">
+        <Project Path="projects/Standard.Data.Text/Standard.Data.Text.csproj" />
+        <Project Path="projects/Standard.Data.Text.Awsl/Awsl.csproj" />
+        <Project Path="projects/Standard.Data.Text.Valkyrie/Valkyrie.csproj" />
+        <Project Path="projects/Standard.Data.Text.Wat/Wat.csproj" />
+        <Project Path="projects/Standard.Data.Text.Wit/Wit.csproj" />
+    </Folder>
+    <!-- 模板引擎 -->
+    <Folder Name="/std.template/">
+        <Project Path="projects/Standard.Template/Standard.Template.csproj" />
+        <Project Path="projects/Standard.Template/Dejavu/Dejavu.csproj" />
+        <Project Path="projects/Standard.Template/Site/Site.csproj" />
+        <Project Path="projects/Standard.Template/Cms/Cms.csproj" />
+        <Project Path="projects/Standard.Template/Config/Config.csproj" />
+        <Project Path="projects/Standard.Template/Deploy/Deploy.csproj" />
+        <Project Path="projects/Standard.Template/EBook/EBook.csproj" />
+        <Project Path="projects/Standard.Template/Book/Book.csproj" />
+        <Project Path="projects/Standard.Template/Mailer/Mailer.csproj" />
+        <Project Path="projects/Standard.Template/Report/Report.csproj" />
+        <Project Path="projects/Standard.Template/Jinja/Jinja.csproj" />
+        <Project Path="projects/Standard.Template/Hbs/Hbs.csproj" />
+    </Folder>
+    <Folder Name="/Nyar/">
+        <Project Path="projects/Nyar/Nyar.csproj" />
+        <Project Path="projects/Nyar.Dialect/Nyar.Dialect.csproj" />
+        <Project Path="projects/Nyar.Dialect.Core/Nyar.Dialect.Core.csproj" />
+        <Project Path="projects/Nyar.Dialect.Standard/Nyar.Dialect.Standard.csproj" />
+        <Project Path="projects/Nyar.Dialect.Web/Nyar.Dialect.Web.csproj" />
+        <Project Path="projects/Nyar.SourceGenerator/Nyar.SourceGenerator.csproj" />
+        <Project Path="projects/Nyar.VM.NyarVM/NyarVM.csproj" />
+        <Project Path="projects/Nyar.VM.LegacyVM/LegacyVM.csproj" />
+        <Project Path="projects/Nyar.VM.TextVM/Nyar.VM.TextVM.csproj" />
+        <Project Path="projects/Nyar.VM.TextVM.Compiler/Nyar.VM.TextVM.Compiler.csproj" />
+        <Project Path="projects/Nyar.VM.TextVM.MsBuild/Nyar.VM.TextVM.MsBuild.csproj" />
+        
+        <Project Path="projects/Nyar.PackageRegistry/Nyar.PackageRegistry.csproj" />
+        <Project Path="projects/Nyar.PackageManager/Nyar.PackageManager.csproj" />
+        <Project Path="tests/Nyar.Tests/Nyar.Tests.csproj" />
+    </Folder>
+    <Folder Name="/nyar.language/">
+        <Project Path="projects/Nyar.Language/Nyar.Language.csproj" />
+        <Project Path="projects/Nyar.Language.Css/Css.csproj" />
+        <Project Path="projects/Nyar.Language.Scss/Scss.csproj" />
+        <Project Path="projects/Nyar.Language.Tailwind/Tailwind.csproj" />
+    </Folder>
+    <Folder Name="/Valhalla/">
+        <Project Path="projects/Valhalla/Valhalla.csproj" />
+        <Project Path="projects/Valhalla.Client/Valhalla.Client.csproj" />
+        <Project Path="projects/Valhalla.Config/Valhalla.Config.csproj" />
+        <Project Path="projects/Valhalla.Server/Valhalla.Server.csproj" />
+        
+    </Folder>
+    <Folder Name="/Atlas/">
+        <Project Path="projects/Standard.Application.Server/Standard.Application.Server.csproj" />
+        <Project Path="projects/Standard.Application.Client/Standard.Application.Client.csproj" />
+        
+    </Folder>
+    <Folder Name="/Asgard/">
+        <!-- 全栈框架 -->
+        
+        
+    </Folder>
+    <Folder Name="/tools/">
+    </Folder>
+    <Folder Name="/Tests/">
+        <Project Path="tests/Dejavu.Tests/Dejavu.Tests.csproj" />
+        <Project Path="tests/Nyar.VM.TextVM.Tests/Nyar.VM.TextVM.Tests.csproj" />
+    </Folder>
+    <Folder Name="/Schema/">
+        
+    </Folder>
+    <Folder Name="/Tests/Olympus/">
+        <Project Path="tests/Galatea.Tests/Galatea.Tests.csproj" />
+    </Folder>
+    <Folder Name="/Tests/Tools/">
+        <Project Path="tests/Legion.Tests/Valkyrie.PackageManager.Tests.csproj" />
+    </Folder>
+    <Folder Name="/Tests/Valhalla/">
+        <Project Path="tests/Valhalla.Tests/Valhalla.Tests.csproj" />
+    </Folder>
+    <Folder Name="/Sonic/DL/">
+        <Project Path="projects/Standard.DL/Standard.DL.csproj" />
+    </Folder>
+</Solution>

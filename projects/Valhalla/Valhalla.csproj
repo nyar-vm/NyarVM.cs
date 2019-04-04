@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Description>瓦尓哈拉核心库 — 名字标准化、manifest、授权链、审计日志等共享类型</Description>
+        <Authors>Nyar Team</Authors>
+        <RootNamespace>Valhalla</RootNamespace>
+        <AssemblyName>Valhalla</AssemblyName>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\projects\language\Nyar.Language.Von\Nyar.Language.Von.csproj"/>
+    </ItemGroup>
+
+</Project>

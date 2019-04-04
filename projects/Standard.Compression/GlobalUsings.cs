@@ -1,0 +1,1 @@
+global using Stream = System.IO.Stream;

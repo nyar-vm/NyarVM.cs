@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>true</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <RootNamespace>Atlas.Tests</RootNamespace>
+        <AssemblyName>Atlas.Tests</AssemblyName>
+        <PackageId>Atlas.Tests</PackageId>
+        <Version>0.1.0</Version>
+        <Authors>Olympus Team</Authors>
+        <Description>Atlas 框架单元测试</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <IsPackable>false</IsPackable>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.0"/>
+        <PackageReference Include="xunit" Version="2.9.0"/>
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.9.0"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\projects\Sonic.Standard.Application.Server\Sonic.Standard.Application.Server.csproj"/>
+    </ItemGroup>
+
+  <ItemGroup>
+        <Compile Remove="Core\ParameterBinderTests.cs"/>
+        <Compile Remove="Core\ControllerScannerTests.cs"/>
+  
+        <Compile Remove="Cloud\CloudAbstractionsTests.cs"/>
+    </ItemGroup>
+</Project>

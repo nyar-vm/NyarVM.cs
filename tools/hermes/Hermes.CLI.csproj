@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <RootNamespace>Hermes.CLI</RootNamespace>
+        <AssemblyName>Hermes.CLI</AssemblyName>
+        <Version>0.1.0</Version>
+        <Authors>NyarVM</Authors>
+        <Description>Hermes CLI — 元编程代码生成工具</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackAsTool>true</PackAsTool>
+        <ToolCommandName>hermes</ToolCommandName>
+        <PackageOutputPath>./nupkg</PackageOutputPath>
+        <PackageTags>hermes;cli;codegen;orm;rpc;dejavu</PackageTags>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\projects\Nyar\Nyar.csproj"/>
+        <ProjectReference Include="..\..\projects\Sonic.Standard.Schema\Sonic.Standard.Schema.csproj" />
+        <ProjectReference Include="..\..\projects\Sonic.Standard.Command\Sonic.Standard.Command.csproj"/>
+    </ItemGroup>
+</Project>

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RootNamespace>Nyar.Binary.Png</RootNamespace>
+    <AssemblyName>Nyar.Binary.Png</AssemblyName>
+    <PackageId>Nyar.Binary.Png</PackageId>
+          <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sonic.Standard.Data.Binary.csproj" />
+    <ProjectReference Include="..\..\Nyar\Nyar.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- 排除缺失 Std.Data.Binary.Hashing 的文件 -->
+    <Compile Remove="Encode\PngEncoder.cs"/>
+  </ItemGroup>
+</Project>

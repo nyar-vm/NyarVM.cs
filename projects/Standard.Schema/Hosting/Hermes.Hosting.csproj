@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <RootNamespace>Hermes.Hosting</RootNamespace>
+        <AssemblyName>Hermes.Hosting</AssemblyName>
+        <PackageId>Hermes.Hosting</PackageId>
+        <Authors>NyarVM</Authors>
+        <Description>Hermes 托管层 — 环境配置 + DI 注册 + 基础设施编排</Description>
+        <PackageTags>hermes;hosting;infrastructure;di</PackageTags>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.0"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Sonic.Standard.Schema.csproj" />
+        <ProjectReference Include="..\..\Sonic.Standard.Schema.ORM\Sonic.Standard.Schema.ORM.csproj" />
+    </ItemGroup>
+</Project>

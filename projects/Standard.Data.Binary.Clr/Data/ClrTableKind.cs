@@ -1,0 +1,53 @@
+﻿namespace Std.Data.Binary.Clr.Data;
+
+/// <summary>
+///     元数据表类型（ECMA-335 §22）的
+/// </summary>
+public enum ClrTableKind : byte
+{
+    module = 0,
+    type_ref = 1,
+    type_def = 2,
+    field_ptr = 3,
+    field = 4,
+    method_ptr = 5,
+    method_def = 6,
+    param_ptr = 7,
+    param = 8,
+    interface_impl = 9,
+    member_ref = 10,
+    constant = 11,
+    custom_attribute = 12,
+    field_marshal = 13,
+    decl_security = 14,
+    class_layout = 15,
+    field_layout = 16,
+    stand_alone_sig = 17,
+    event_map = 18,
+    event_ptr = 19,
+    @event = 20,
+    property_map = 21,
+    property_ptr = 22,
+    property = 23,
+    method_semantics = 24,
+    method_impl = 25,
+    module_ref = 26,
+    type_spec = 27,
+    impl_map = 28,
+    field_rva = 29,
+    enc_log = 30,
+    enc_map = 31,
+    assembly = 32,
+    assembly_processor = 33,
+    assembly_os = 34,
+    assembly_ref = 35,
+    assembly_ref_processor = 36,
+    assembly_ref_os = 37,
+    file = 38,
+    exported_type = 39,
+    manifest_resource = 40,
+    nested_class = 41,
+    generic_param = 42,
+    method_spec = 43,
+    generic_param_constraint = 44
+}

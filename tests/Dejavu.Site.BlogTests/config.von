@@ -1,0 +1,57 @@
+{
+  title: "My DejaVu Site",
+  description: "A site built with DejaVu",
+  author: "Anonymous",
+  language: "zh-CN",
+  
+  navigation: [
+    {"首页": "/"},
+    {"用户文档": "/docs/guide/getting-started/"},
+    {"API 文档": "/docs/api/overview/"},
+    {"文章": "/posts/"},
+    {"关于": "/about/"}
+  ],
+  
+  sidebar: [
+    {"最近文章": "/posts/"},
+    {"标签": "/tags/"},
+    {"分类": "/categories/"}
+  ],
+  
+  languages: {
+    "zh-CN": {
+      home: "首页",
+      posts: "文章",
+      tags: "标签",
+      about: "关于",
+      categories: "分类",
+      recentPosts: "最近文章",
+      language: "语言",
+      searchPlaceholder: "搜索...",
+      apiDocs: "API 文档",
+      guideDocs: "用户文档",
+      modules: "模块",
+      tableOfContents: "目录",
+      previous: "上一节",
+      next: "下一节",
+      searchApi: "搜索 API..."
+    },
+    en: {
+      home: "Home",
+      posts: "Posts",
+      tags: "Tags",
+      about: "About",
+      categories: "Categories",
+      recentPosts: "Recent Posts",
+      language: "Language",
+      searchPlaceholder: "Search...",
+      apiDocs: "API Docs",
+      guideDocs: "Guide",
+      modules: "Modules",
+      tableOfContents: "Contents",
+      previous: "Previous",
+      next: "Next",
+      searchApi: "Search API..."
+    }
+  }
+}

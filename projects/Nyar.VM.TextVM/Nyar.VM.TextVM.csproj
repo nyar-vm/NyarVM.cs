@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <PackageId>Nyar.VM.TextVM</PackageId>
+        <RootNamespace>Nyar.VM.TextVM</RootNamespace>
+        <AssemblyName>Nyar.VM.TextVM</AssemblyName>
+        <Authors>Nyar Team</Authors>
+        <Description>TextVM runtime - multi-encoding regex engine with zero-overhead byte slicing</Description>
+        <PackageTags>nyar vm text regex</PackageTags>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="Nyar.VM.TextVM.Tests" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Nyar.VM.TextVM.Compiler\Nyar.VM.TextVM.Compiler.csproj"/>
+    </ItemGroup>
+
+</Project>

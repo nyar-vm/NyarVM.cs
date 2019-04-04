@@ -1,0 +1,397 @@
+using System.Collections.Immutable;
+using System.Text;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
+
+namespace Sonic.Data.Generator;
+
+/// <summary>
+///     为标记了 <c>[Sandbox]</c> 特性的类自动生成资源限制包装，
+///     处理 <c>[Restrict]</c> 特性标记的方法级资源访问控制。
+/// </summary>
+[Generator]
+public sealed class SandboxGenerator : IIncrementalGenerator
+{
+    private const string _sandbox_attribute_full_name = "Sonic.Standard.Security.Sandbox.SandboxAttribute";
+    private const string _restrict_attribute_full_name = "Sonic.Standard.Security.Sandbox.RestrictAttribute";
+
+    /// <summary>
+    ///     初始化增量源代码生成管道。
+    /// </summary>
+    /// <param name="context">增量生成器初始化上下文。</param>
+    public void Initialize(IncrementalGeneratorInitializationContext context)
+    {
+        var targetTypes = context.SyntaxProvider
+            .ForAttributeWithMetadataName(
+                _sandbox_attribute_full_name,
+                static (node, _) => node is TypeDeclarationSyntax typeDecl &&
+                                    typeDecl.Modifiers.Any(SyntaxKind.PartialKeyword),
+                static (ctx, ct) => transform_sandbox(ctx, ct))
+            .Where(static info => info is not null)
+            .Select(static (info, _) => info!.Value)
+            .Collect();
+
+        context.RegisterSourceOutput(targetTypes, generate_source);
+    }
+
+    /// <summary>
+    ///     提取标记了 <c>[Sandbox]</c> 的类型信息。
+    /// </summary>
+    private static SandboxTypeInfo? transform_sandbox(GeneratorAttributeSyntaxContext context, CancellationToken ct)
+    {
+        var typeSymbol = (INamedTypeSymbol)context.TargetSymbol;
+
+        var sandboxAttr = context.Attributes.FirstOrDefault(a =>
+            a.AttributeClass?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) ==
+            $"global::{_sandbox_attribute_full_name}");
+
+        var policy = 0;
+
+        if (sandboxAttr is not null)
+            foreach (var named in sandboxAttr.NamedArguments)
+                if (named is { Key: "policy", Value.Value: int p })
+                    policy = p;
+
+        var restrictions = extract_restrictions(typeSymbol);
+
+        return new SandboxTypeInfo(
+            typeSymbol.Name,
+            typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+            typeSymbol.ContainingNamespace?.ToDisplayString(),
+            typeSymbol.TypeKind == TypeKind.Struct,
+            policy,
+            restrictions);
+    }
+
+    /// <summary>
+    ///     提取类型中标记了 <c>[Restrict]</c> 的方法信息。
+    /// </summary>
+    private static List<RestrictionInfo> extract_restrictions(INamedTypeSymbol typeSymbol)
+    {
+        var restrictions = new List<RestrictionInfo>();
+
+        foreach (var member in typeSymbol.GetMembers())
+        {
+            if (member is not IMethodSymbol method) continue;
+
+            if (method.IsStatic) continue;
+
+            if (method.DeclaredAccessibility != Accessibility.Public) continue;
+
+            var restrictAttr = method.GetAttributes().FirstOrDefault(a =>
+                a.AttributeClass?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) ==
+                $"global::{_restrict_attribute_full_name}");
+
+            if (restrictAttr is null) continue;
+
+            var resource = 0;
+            var permission = 0;
+
+            foreach (var named in restrictAttr.NamedArguments)
+            {
+                if (named is { Key: "resource", Value.Value: int r }) resource = r;
+
+                if (named is { Key: "permission", Value.Value: int pm }) permission = pm;
+            }
+
+            var parameters = method.Parameters
+                .Select(p => new SandboxParameterInfo(
+                    p.Name,
+                    p.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+                    p.RefKind))
+                .ToList();
+
+            restrictions.Add(new RestrictionInfo(
+                method.Name,
+                method.ReturnType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+                method.ReturnsVoid,
+                parameters,
+                resource,
+                permission));
+        }
+
+        return restrictions;
+    }
+
+    /// <summary>
+    ///     生成所有类型的沙箱资源限制包装源代码。
+    /// </summary>
+    private static void generate_source(SourceProductionContext context, ImmutableArray<SandboxTypeInfo> typeInfos)
+    {
+        foreach (var info in typeInfos)
+        {
+            var sourceText = generate_sandbox_source(info);
+            var hintName = $"{info.type_name}.Sandbox.g.cs";
+            context.AddSource(hintName, SourceText.From(sourceText, Encoding.UTF8));
+        }
+    }
+
+    /// <summary>
+    ///     生成单个类型的沙箱资源限制包装源代码。
+    /// </summary>
+    private static string generate_sandbox_source(SandboxTypeInfo info)
+    {
+        var sb = new SourceTextBuilder();
+        sb.append_line("// <auto-generated />");
+        sb.append_line("#nullable enable");
+        sb.append_line();
+
+        if (!string.IsNullOrEmpty(info.namespace_name))
+        {
+            sb.append_line($"namespace {info.namespace_name};");
+            sb.append_line();
+        }
+
+        var typeKeyword = info.is_struct ? "partial struct" : "partial class";
+        sb.append_line($"{typeKeyword} {info.type_name}");
+        using (sb.block())
+        {
+            generate_sandbox_policy_method(sb, info);
+            sb.append_line();
+
+            foreach (var restriction in info.restrictions)
+            {
+                generate_restriction_wrapper(sb, info, restriction);
+                sb.append_line();
+            }
+        }
+
+        return sb.ToString();
+    }
+
+    /// <summary>
+    ///     生成沙箱策略查询方法。
+    /// </summary>
+    private static void generate_sandbox_policy_method(SourceTextBuilder sb, SandboxTypeInfo info)
+    {
+        sb.append_line("/// <summary>");
+        sb.append_line($"/// 获取当前 <c>{info.type_name}</c> 的沙箱策略。");
+        sb.append_line("/// </summary>");
+        sb.append_line("/// <returns>沙箱策略。</returns>");
+        sb.append_line("public global::Sonic.Standard.Security.Sandbox.SandboxPolicy get_sandbox_policy()");
+        using (sb.block())
+        {
+            sb.append_line($"return (global::Sonic.Standard.Security.Sandbox.SandboxPolicy){info.policy};");
+        }
+    }
+
+    /// <summary>
+    ///     为单个受限方法生成资源访问检查包装方法。
+    /// </summary>
+    private static void generate_restriction_wrapper(SourceTextBuilder sb, SandboxTypeInfo info,
+        RestrictionInfo restriction)
+    {
+        var paramList = string.Join(", ", restriction.parameters.Select(p => format_parameter(p)));
+        var argList = string.Join(", ", restriction.parameters.Select(p => format_argument(p)));
+
+        sb.append_line("/// <summary>");
+        sb.append_line($"/// 带资源访问检查的 <c>{restriction.method_name}</c> 包装方法。");
+        sb.append_line("/// </summary>");
+
+        foreach (var p in restriction.parameters) sb.append_line($"/// <param name=\"{p.name}\">{p.name} 参数。</param>");
+
+        var returnType = restriction.is_void ? "void" : restriction.return_type;
+        sb.append_line($"public {returnType} {restriction.method_name}_sandboxed({paramList})");
+        using (sb.block())
+        {
+            sb.append_line(
+                $"var __resource = (global::Sonic.Standard.Security.Sandbox.ResourceKind){restriction.resource};");
+            sb.append_line(
+                $"var __permission = (global::Sonic.Standard.Security.Sandbox.AccessPermission){restriction.permission};");
+            sb.append_line(
+                "var __allowed = global::Sonic.Standard.Security.Sandbox.SandboxContext.check_access(__resource, __permission);");
+            sb.append_line("if (!__allowed)");
+            using (sb.block())
+            {
+                sb.append_line(
+                    "throw new global::System.Security.SecurityException($\"沙箱限制：拒绝访问资源 {__resource}，所需权限 {__permission}\");");
+            }
+
+            sb.append_line();
+
+            if (restriction.is_void)
+                sb.append_line($"{restriction.method_name}({argList});");
+            else
+                sb.append_line($"return {restriction.method_name}({argList});");
+        }
+    }
+
+    /// <summary>
+    ///     格式化参数声明。
+    /// </summary>
+    private static string format_parameter(SandboxParameterInfo param)
+    {
+        var prefix = param.ref_kind switch
+        {
+            RefKind.Ref => "ref ",
+            RefKind.Out => "out ",
+            RefKind.In => "in ",
+            _ => ""
+        };
+
+        return $"{prefix}{param.Type} {param.name}";
+    }
+
+    /// <summary>
+    ///     格式化参数调用。
+    /// </summary>
+    private static string format_argument(SandboxParameterInfo param)
+    {
+        var prefix = param.ref_kind switch
+        {
+            RefKind.Ref => "ref ",
+            RefKind.Out => "out ",
+            RefKind.In => "in ",
+            _ => ""
+        };
+
+        return $"{prefix}{param.name}";
+    }
+
+    #region 数据模型
+
+    /// <summary>
+    ///     标记了 <c>[Sandbox]</c> 的类型信息。
+    /// </summary>
+    internal readonly struct SandboxTypeInfo
+    {
+        /// <summary>
+        ///     类型名称。
+        /// </summary>
+        public readonly string type_name;
+
+        /// <summary>
+        ///     完全限定类型名称。
+        /// </summary>
+        public readonly string fully_qualified_name;
+
+        /// <summary>
+        ///     命名空间名称。
+        /// </summary>
+        public readonly string? namespace_name;
+
+        /// <summary>
+        ///     是否为结构体。
+        /// </summary>
+        public readonly bool is_struct;
+
+        /// <summary>
+        ///     沙箱策略值。
+        /// </summary>
+        public readonly int policy;
+
+        /// <summary>
+        ///     资源限制列表。
+        /// </summary>
+        public readonly List<RestrictionInfo> restrictions;
+
+        /// <summary>
+        ///     初始化 <see cref="SandboxTypeInfo" /> 的新实例。
+        /// </summary>
+        public SandboxTypeInfo(
+            string typeName,
+            string fullyQualifiedName,
+            string? namespaceName,
+            bool isStruct,
+            int policy,
+            List<RestrictionInfo> restrictions)
+        {
+            type_name = typeName;
+            fully_qualified_name = fullyQualifiedName;
+            namespace_name = namespaceName;
+            is_struct = isStruct;
+            this.policy = policy;
+            this.restrictions = restrictions;
+        }
+    }
+
+    /// <summary>
+    ///     资源限制方法信息。
+    /// </summary>
+    internal readonly struct RestrictionInfo
+    {
+        /// <summary>
+        ///     方法名称。
+        /// </summary>
+        public readonly string method_name;
+
+        /// <summary>
+        ///     返回类型的完全限定名称。
+        /// </summary>
+        public readonly string return_type;
+
+        /// <summary>
+        ///     是否为 void 返回类型。
+        /// </summary>
+        public readonly bool is_void;
+
+        /// <summary>
+        ///     参数列表。
+        /// </summary>
+        public readonly List<SandboxParameterInfo> parameters;
+
+        /// <summary>
+        ///     资源类型值。
+        /// </summary>
+        public readonly int resource;
+
+        /// <summary>
+        ///     访问权限值。
+        /// </summary>
+        public readonly int permission;
+
+        /// <summary>
+        ///     初始化 <see cref="RestrictionInfo" /> 的新实例。
+        /// </summary>
+        public RestrictionInfo(
+            string methodName,
+            string returnType,
+            bool isVoid,
+            List<SandboxParameterInfo> parameters,
+            int resource,
+            int permission)
+        {
+            method_name = methodName;
+            return_type = returnType;
+            is_void = isVoid;
+            this.parameters = parameters;
+            this.resource = resource;
+            this.permission = permission;
+        }
+    }
+
+    /// <summary>
+    ///     方法参数信息。
+    /// </summary>
+    internal readonly struct SandboxParameterInfo
+    {
+        /// <summary>
+        ///     参数名称。
+        /// </summary>
+        public readonly string name;
+
+        /// <summary>
+        ///     参数类型的完全限定名称。
+        /// </summary>
+        public readonly string Type;
+
+        /// <summary>
+        ///     参数传递方式。
+        /// </summary>
+        public readonly RefKind ref_kind;
+
+        /// <summary>
+        ///     初始化 <see cref="SandboxParameterInfo" /> 的新实例。
+        /// </summary>
+        public SandboxParameterInfo(string name, string type, RefKind refKind)
+        {
+            this.name = name;
+            Type = type;
+            ref_kind = refKind;
+        }
+    }
+
+    #endregion
+}

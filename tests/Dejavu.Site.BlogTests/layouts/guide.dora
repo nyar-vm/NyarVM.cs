@@ -1,0 +1,47 @@
+<% extends 'layouts/default.dora' %>
+<% block content %>
+<div class="guide-doc">
+    <div class="guide-doc-header">
+        <h1><% page.title %></h1>
+    </div>
+    <div class="guide-doc-body">
+        <nav class="guide-doc-sidebar">
+            <% loop guideDocs %>
+            <% if item.type == 'chapter' %>
+            <div class="guide-chapter-header">
+                <h3 class="guide-chapter-title"><% item.title %></h3>
+            </div>
+            <% end if %>
+            <% if item.type == 'section' %>
+            <a href="<% item.url %>" class="guide-section-link<% if item.url == page.url %> active<% end if %>"><% item.title %></a>
+            <% end if %>
+            <% end loop %>
+        </nav>
+        <main class="guide-doc-content">
+            <% block doc-content %><% end block %>
+            <div class="guide-nav-footer">
+                <% if page.previous %>
+                <a href="<% page.previous.url %>" class="guide-nav-prev">
+                    <span class="guide-nav-label" data-i18n="previous">上一节</span>
+                    <span class="guide-nav-title"><% page.previous.title %></span>
+                </a>
+                <% end if %>
+                <% if page.next %>
+                <a href="<% page.next.url %>" class="guide-nav-next">
+                    <span class="guide-nav-label" data-i18n="next">下一节</span>
+                    <span class="guide-nav-title"><% page.next.title %></span>
+                </a>
+                <% end if %>
+            </div>
+        </main>
+        <aside class="guide-doc-toc">
+            <h4 data-i18n="tableOfContents">目录</h4>
+            <ul class="guide-toc-list">
+                <% loop page.toc %>
+                <li class="guide-toc-item guide-toc-level-<% item.level %>"><a href="#<% item.id %>"><% item.text %></a></li>
+                <% end loop %>
+            </ul>
+        </aside>
+    </div>
+</div>
+<% end block %>

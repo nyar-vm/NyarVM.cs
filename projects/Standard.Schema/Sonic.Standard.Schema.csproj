@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <RootNamespace>Std.Schema</RootNamespace>
+        <PackageId>Sonic.Standard.Schema</PackageId>
+        <Authors>NyarVM</Authors>
+        <Description>Hermes 核心 IR 类型系统（转发至 Nyar.Avatar.Schema）</Description>
+        <PackageTags>hermes;ir;schema;nyar;avatar</PackageTags>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Nyar\Nyar.csproj"/>
+        <ProjectReference Include="..\Sonic.Standard.Schema.ORM\Sonic.Standard.Schema.ORM.csproj"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Remove="**/*Tests*/**/*.cs" />
+        <Compile Remove="**/*Tests.cs" />
+        <!-- 排除引用未实现类型的文件 -->
+        <Compile Remove="Hosting\**\*.cs"/>
+        <Compile Remove="Plugin\**\*.cs"/>
+        <Compile Remove="RPC\**\*.cs"/>
+        <Compile Remove="Forwardings.cs"/>
+        <Compile Remove="Compiler\**\*.cs"/>
+        <Compile Remove="Generator\**\*.cs"/>
+        <Compile Remove="Config\**\*.cs"/>
+        <Compile Remove="Cache\**\*.cs"/>
+        <Compile Remove="Migrator\**\*.cs"/>
+        <Compile Remove="Storage\**\*.cs"/>
+        <Compile Remove="Stream\**\*.cs"/>
+        <Compile Remove="Database\**\*.cs"/>
+    </ItemGroup>
+</Project>

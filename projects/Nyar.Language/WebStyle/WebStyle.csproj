@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <RootNamespace>Nyar.Language.WebStyle</RootNamespace>
+        <AssemblyName>Nyar.Language.WebStyle</AssemblyName>
+        <Authors>Nyar Team</Authors>
+        <Description>Web Style 统一管线 — CSS / SCSS / Tailwind 的统一编译、合并与输出门面</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Nyar.Language.Css\Css.csproj" />
+        <ProjectReference Include="..\..\Standard.Data.Text\Sonic.Standard.Data.Text.csproj" />
+    </ItemGroup>
+  
+</Project>

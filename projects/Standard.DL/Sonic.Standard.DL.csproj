@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <PackageId>Sonic.Standard.DL</PackageId>
+        <RootNamespace>Std.DL</RootNamespace>
+        <AssemblyName>Sonic.Standard.DL</AssemblyName>
+        <Description>Galatea 深度学习框架 —— 基于 Nyar 优化器的神经网络编译与执行引擎</Description>
+        <Authors>Olymp</Authors>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Nyar\Nyar.csproj"/>
+        <ProjectReference Include="..\Sonic.Standard.Compression\Sonic.Standard.Compression.csproj"/>
+        <ProjectReference Include="..\Sonic.Standard\Sonic.Standard.csproj"/>
+        <ProjectReference Include="..\Sonic.Core\Sonic.Core.csproj"/>
+    </ItemGroup>
+
+  <ItemGroup>
+        <Compile Remove="Compiler\NyarBridge\GraphToIkunConverter.cs"/>
+        <Compile Remove="Compiler\NyarBridge\TensorIkunOptimizer.cs"/>
+  
+        <Compile Remove="Data\GalxPack.cs"/>
+  
+        <Compile Remove="Flux\OnnxExporter.cs"/>
+  
+        <Compile Remove="Compiler\NyarBridge\NeuralIKunNodes.cs"/>
+    </ItemGroup>
+</Project>

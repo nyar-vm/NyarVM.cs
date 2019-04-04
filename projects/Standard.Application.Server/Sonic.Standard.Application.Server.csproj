@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>true</ImplicitUsings>
+        <DisableImplicitFrameworkReferences>false</DisableImplicitFrameworkReferences>
+        <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <PackageId>Sonic.Standard.Application.Server</PackageId>
+        <RootNamespace>Std.App.Server</RootNamespace>
+        <Description>Atlas 特性驱动的后端框架，基于 Sonic 构建，整合各大云服务。</Description>
+        <Authors>Olympus Team</Authors>
+        <IsPackable>true</IsPackable>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    </PropertyGroup>
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.NETCore.App"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0"/>
+
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Remove="Cloud\**"/>
+        <!-- 排除引用未实现类型（Router/RouteContext/IMiddleware/IRouteHandler/MiddlewarePipeline/NetApp）的文件 -->
+        <Compile Remove="Core\AtlasHost.cs"/>
+        <Compile Remove="Core\AtlasResult.cs"/>
+        <Compile Remove="Core\ControllerScanner.cs"/>
+        <Compile Remove="Core\ParameterBinder.cs"/>
+        <Compile Remove="Core\RouteActionHandler.cs"/>
+        <Compile Remove="Middleware\AuthMiddleware.cs"/>
+        <Compile Remove="DI\AtlasServiceCollection.cs"/>
+        <Compile Remove="AtlasApp.cs"/>
+        <Compile Remove="Core\AtlasController.cs"/>
+        <Compile Remove="DI\AtlasHostExtensions.cs"/>
+        <Compile Remove="Serverless\AtlasApplicationFactory.cs"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Sonic.Standard\Sonic.Standard.csproj"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Remove="Systems\ConsoleAtlasSystemLogger.cs"/>
+        <Compile Remove="Core\SystemScanner.cs"/>
+    </ItemGroup>
+</Project>

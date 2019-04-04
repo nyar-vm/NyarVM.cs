@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RootNamespace>Nyar.Binary.Office</RootNamespace>
+    <AssemblyName>Nyar.Binary.Office</AssemblyName>
+    <PackageId>Nyar.Binary.Office</PackageId>
+          <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sonic.Standard.Data.Binary.csproj" />
+    <ProjectReference Include="..\..\Nyar\Nyar.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Decode\OpenXmlDecoder.cs"/>
+  </ItemGroup>
+</Project>

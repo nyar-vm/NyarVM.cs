@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>My DejaVu Site</title>
+    <description>A site built with DejaVu</description>
+    <link></link>
+    <atom:link href="/rss.xml" rel="self" type="application/rss+xml" />
+    <language>zh-CN</language>
+    <lastBuildDate>Sun, 26 Apr 2026 21:03:30 GMT</lastBuildDate>
+    <item>
+      <title>DejaVu.Core 模块</title>
+      <link>/docs/api/core/</link>
+      <guid isPermaLink="true">/docs/api/core/</guid>
+      <pubDate>Thu, 01 Jan 2026 00:00:00 GMT</pubDate>
+      <description>DejaVu.Core 核心渲染引擎，提供模板解析、变量求值和控制流执行。 类 DejavuRenderer 模板渲染器主类。 public class DejavuRenderer { public DejavuRenderer(); public string Render(string template, Dictionary&amp;lt;string, object&amp;gt; context); ...</description>
+    </item>
+    <item>
+      <title>DejaVu API 概览</title>
+      <link>/docs/api/overview/</link>
+      <guid isPermaLink="true">/docs/api/overview/</guid>
+      <pubDate>Thu, 01 Jan 2026 00:00:00 GMT</pubDate>
+      <description>API 概览 DejaVu 提供以下核心模块： ---|:---| Dejavu | 模板渲染引擎核心 | Dejavu.Template | 模板解析与执行 | Dejavu.Site | 静态站点生成器 | Dejavu.Markdown | Markdown 渲染 | Dejavu.Cli | 命令行工具 | 快速开始 using Dejavu; var renderer = new Dej...</description>
+    </item>
+    <item>
+      <title>快速开始</title>
+      <link>/docs/guide/getting-started/</link>
+      <guid isPermaLink="true">/docs/guide/getting-started/</guid>
+      <pubDate>Thu, 01 Jan 2026 00:00:00 GMT</pubDate>
+      <description>快速开始 安装 通过 .NET CLI 安装 DejaVu： dotnet tool install --global DejavuEngine 或者作为项目依赖引用： dotnet add package DejavuEngine 创建第一个站点 初始化站点目录 dejavu site init my-site cd my-site 站点结构 初始化后的目录结构如下： my-site/ ├── ...</description>
+    </item>
+    <item>
+      <title>模板语法</title>
+      <link>/docs/guide/template-syntax/</link>
+      <guid isPermaLink="true">/docs/guide/template-syntax/</guid>
+      <pubDate>Thu, 01 Jan 2026 00:00:00 GMT</pubDate>
+      <description>模板语法 DejaVu 使用 .dora 模板文件，语法基于 &amp;lt;% %&amp;gt; 标签。 变量输出 使用 &amp;lt;% variable %&amp;gt; 输出变量： &amp;lt;&amp;gt;&amp;lt;% page.title %&amp;gt;&amp;lt;/h1&amp;gt; &amp;lt;&amp;gt;&amp;lt;% site.description %&amp;gt;&amp;lt;/p&amp;gt; 支持点号访问嵌套属性： &amp;lt;&amp;gt; &amp;lt;% pa...</description>
+    </item>
+    <item>
+      <title>站点配置</title>
+      <link>/docs/guide/configuration/</link>
+      <guid isPermaLink="true">/docs/guide/configuration/</guid>
+      <pubDate>Thu, 01 Jan 2026 00:00:00 GMT</pubDate>
+      <description>站点配置 DejaVu 使用 VON 格式的 config.von 文件配置站点。 基本配置 { title: &amp;quot;站点标题&amp;quot;, description: &amp;quot;站点描述&amp;quot;, author: &amp;quot;作者&amp;quot;, language: &amp;quot;zh-CN&amp;quot;, baseUrl: &amp;quot;/&amp;quot; } 导航配置 { navigation...</description>
+    </item>
+    <item>
+      <title>Hello World</title>
+      <link>/posts/hello-world/</link>
+      <guid isPermaLink="true">/posts/hello-world/</guid>
+      <pubDate>Mon, 01 Jan 2024 00:00:00 GMT</pubDate>
+      <description>Hello World This is my first post using DejaVu! Features Fast rendering Easy to use Flexible templates</description>
+      <category>hello</category>
+      <category>world</category>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <ImplicitUsings>false</ImplicitUsings>
+        <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+        <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <PackageId>Sonic.Core</PackageId>
+        <RootNamespace>Core</RootNamespace>
+        <Description>Sonic standard library attribute facade. Zero logic, zero dependencies.</Description>
+        <Authors>Sonic Team</Authors>
+        <Company>Sonic</Company>
+        <Product>Hypersonic</Product>
+        <PackageTags>sonic;attributes;facade;source-generator;compile-time</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageOutputPath>..\..\packages</PackageOutputPath>
+        <PackageReadmeFile>readme.md</PackageReadmeFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="readme.md" Pack="true" PackagePath=""/>
+    </ItemGroup>
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.NETCore.App"/>
+    </ItemGroup>
+</Project>

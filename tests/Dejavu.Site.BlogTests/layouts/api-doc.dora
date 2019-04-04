@@ -1,0 +1,37 @@
+<% extends 'layouts/default.dora' %>
+<% block content %>
+<div class="api-doc">
+    <div class="api-doc-header">
+        <div class="api-doc-crate">
+            <h1><% page.title %></h1>
+            <span class="api-doc-version"><% page.version %></span>
+        </div>
+        <div class="api-doc-search">
+            <input type="text" class="api-search-input" placeholder="搜索 API..." data-i18n-placeholder="searchApi">
+        </div>
+    </div>
+    <div class="api-doc-body">
+        <nav class="api-doc-sidebar">
+            <div class="api-sidebar-section">
+                <h4 data-i18n="modules">模块</h4>
+                <ul class="api-module-list">
+                    <% loop page.modules %>
+                    <li><a href="<% item.url %>" class="api-module-link<% if item.name == page.currentModule %> active<% end if %>"><% item.name %></a></li>
+                    <% end loop %>
+                </ul>
+            </div>
+        </nav>
+        <main class="api-doc-content">
+            <% block doc-content %><% end block %>
+        </main>
+        <aside class="api-doc-toc">
+            <h4 data-i18n="tableOfContents">目录</h4>
+            <ul class="api-toc-list">
+                <% loop page.toc %>
+                <li class="api-toc-item api-toc-level-<% item.level %>"><a href="#<% item.id %>"><% item.text %></a></li>
+                <% end loop %>
+            </ul>
+        </aside>
+    </div>
+</div>
+<% end block %>

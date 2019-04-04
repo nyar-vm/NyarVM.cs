@@ -1,0 +1,1 @@
+global using Nyar.Assembler;

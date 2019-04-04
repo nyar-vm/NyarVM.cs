@@ -1,0 +1,10 @@
+<% extends 'layouts/default.dora' %>
+<% block content %>
+<article>
+    <h2><% page.title %></h2>
+    <time><% page.date %></time>
+    <div class="content">
+        <% page.content %>
+    </div>
+</article>
+<% end block %>

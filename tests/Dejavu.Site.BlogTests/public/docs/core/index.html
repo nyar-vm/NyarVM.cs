@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DejaVu.Core 模块 - My DejaVu Site</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <a href="/">My DejaVu Site</a>
+        </div>
+        <div class="navbar-menu">
+            
+            <a href="/" class="navbar-item">首页</a>
+            
+            <a href="/docs/guide/getting-started/" class="navbar-item">用户文档</a>
+            
+            <a href="/docs/api/overview/" class="navbar-item">API 文档</a>
+            
+            <a href="/posts/" class="navbar-item">文章</a>
+            
+            <a href="/about/" class="navbar-item">关于</a>
+            
+        </div>
+        <div class="navbar-actions">
+            <div class="lang-switcher">
+                <button class="lang-btn" id="langToggle">
+                    <span class="lang-icon">🌐</span>
+                    <span class="lang-label" data-i18n="language">语言</span>
+                    <span class="lang-arrow">▾</span>
+                </button>
+                <div class="lang-dropdown" id="langDropdown">
+                    <a href="#" class="lang-option" data-lang="zh-CN">中文</a>
+                    <a href="#" class="lang-option" data-lang="en">English</a>
+                </div>
+            </div>
+            <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+        </div>
+    </nav>
+
+    <div class="layout">
+        <main class="content">
+            
+<div class="api-doc">
+    <div class="api-doc-header">
+        <div class="api-doc-crate">
+            <h1>DejaVu.Core 模块</h1>
+            <span class="api-doc-version">0.1.0</span>
+        </div>
+        <div class="api-doc-search">
+            <input type="text" class="api-search-input" placeholder="搜索 API..." data-i18n-placeholder="searchApi">
+        </div>
+    </div>
+    <div class="api-doc-body">
+        <nav class="api-doc-sidebar">
+            <div class="api-sidebar-section">
+                <h4 data-i18n="modules">模块</h4>
+                <ul class="api-module-list">
+                    
+                    <li><a href="/docs/api/core/" class="api-module-link">core</a></li>
+                    
+                    <li><a href="/docs/api/template/" class="api-module-link">template</a></li>
+                    
+                    <li><a href="/docs/api/site/" class="api-module-link">site</a></li>
+                    
+                    <li><a href="/docs/api/markdown/" class="api-module-link">markdown</a></li>
+                    
+                    <li><a href="/docs/api/cli/" class="api-module-link">cli</a></li>
+                    
+                </ul>
+            </div>
+        </nav>
+        <main class="api-doc-content">
+            <h2 id="dejavucore"> DejaVu.Core</h2>
+<p>核心渲染引擎，提供模板解析、变量求值和控制流执行。 </p>
+<h3 id="类"> 类</h3>
+<h4 id="codedejavurenderercode"> <code>DejavuRenderer</code></h4>
+<p>模板渲染器主类。 </p>
+<pre><code class="language-csharp">public class DejavuRenderer
+{
+    
+public DejavuRenderer();
+    
+public string Render(string template, Dictionary&lt;string, object&gt; context);
+    
+public string RenderFile(string templatePath, Dictionary&lt;string, object&gt; context);
+}</code></pre>
+<h4 id="codedejavutemplatecode"> <code>DejavuTemplate</code></h4>
+<p>已解析的模板对象。 </p>
+<pre><code class="language-csharp">public class DejavuTemplate
+{
+    
+public string Source { get; }
+    
+public List&lt;DejaVuNode&gt; Nodes { get; }
+    
+public string Execute(Dictionary&lt;string, object&gt; context);
+}</code></pre>
+<h3 id="接口"> 接口</h3>
+<h4 id="codeidejavuloadercode"> <code>IDejavuLoader</code></h4>
+<p>模板加载器接口。 </p>
+<pre><code class="language-csharp">public interface IDejavuLoader
+{
+    
+string LoadTemplate(string name);
+    
+bool TemplateExists(string name);
+}</code></pre>
+<h3 id="枚举"> 枚举</h3>
+<h4 id="codedejavunodetypecode"> <code>DejaVuNodeType</code></h4>
+<table>
+<thead>
+<tr>
+<th>模板节点类型。</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>---|:---|</td>
+</tr>
+<tr>
+<td><code>Text</code> | 纯文本节点 |</td>
+</tr>
+<tr>
+<td><code>Variable</code> | 变量输出节点 |</td>
+</tr>
+<tr>
+<td><code>If</code> | 条件判断节点 |</td>
+</tr>
+<tr>
+<td><code>Loop</code> | 循环节点 |</td>
+</tr>
+<tr>
+<td><code>Block</code> | 块定义节点 |</td>
+</tr>
+<tr>
+<td><code>Extends</code> | 模板继承节点 |</td>
+</tr>
+<tr>
+<td><code>Include</code> | 模板包含节点 |</td>
+</tr>
+<tr>
+<td><code>Match</code> | 模式匹配节点 |</td>
+</tr>
+</tbody>
+</table>
+<h3 id="异常"> 异常</h3>
+<h4 id="codetemplatesyntaxexceptioncode"> <code>TemplateSyntaxException</code></h4>
+<p>模板语法错误。 </p>
+<pre><code class="language-csharp">public class TemplateSyntaxException : Exception
+{
+    
+public int Line { get; }
+    
+public int Column { get; }
+    
+public string TemplateSource { get; }
+}</code></pre>
+
+        </main>
+        <aside class="api-doc-toc">
+            <h4 data-i18n="tableOfContents">目录</h4>
+            <ul class="api-toc-list">
+                
+                <li class="api-toc-item api-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+                <li class="api-toc-item api-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+                <li class="api-toc-item api-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+                <li class="api-toc-item api-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+                <li class="api-toc-item api-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+                <li class="api-toc-item api-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+                <li class="api-toc-item api-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+                <li class="api-toc-item api-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+                <li class="api-toc-item api-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+                <li class="api-toc-item api-toc-level-toc.level"><a href="#toc.id">toc.text</a></li>
+                
+            </ul>
+        </aside>
+    </div>
+</div>
+
+        </main>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+                <h3 data-i18n="recentPosts">最近文章</h3>
+                <ul class="sidebar-nav">
+                    
+                    <li><a href="/posts/">最近文章</a></li>
+                    
+                    <li><a href="/tags/">标签</a></li>
+                    
+                    <li><a href="/categories/">分类</a></li>
+                    
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <h3 data-i18n="tags">标签</h3>
+                <div class="tag-cloud">
+                    
+                    <span class="tag">hello</span>
+                    
+                    <span class="tag">world</span>
+                    
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <footer>
+        <p>&copy; Anonymous · Built with DejaVu</p>
+    </footer>
+
+    <script src="/js/i18n.js"></script>
+</body>
+</html>

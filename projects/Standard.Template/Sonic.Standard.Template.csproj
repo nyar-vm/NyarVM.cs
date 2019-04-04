@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <RootNamespace>Std.Template</RootNamespace>
+        <AssemblyName>Sonic.Standard.Template</AssemblyName>
+        <PackageId>Sonic.Standard.Template</PackageId>
+        <Version>0.1.0</Version>
+        <Authors>NyarVM</Authors>
+        <Description>模板引擎抽象层</Description>
+        <PackageProjectUrl>https://github.com/nyar-vm/NyarVM</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/nyar-vm/NyarVM</RepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageTags>template;engine</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Sonic.Standard.Data.Text\Sonic.Standard.Data.Text.csproj"/>
+    </ItemGroup>
+
+    <!-- 排除子项目目录下的源文件（子项目有独立 .csproj） -->
+    <ItemGroup>
+        <Compile Remove="Book\**\*.cs"/>
+        <Compile Remove="Cms\**\*.cs"/>
+        <Compile Remove="Config\**\*.cs"/>
+        <Compile Remove="Dejavu\**\*.cs"/>
+        <Compile Remove="Deploy\**\*.cs"/>
+        <Compile Remove="EBook\**\*.cs"/>
+        <Compile Remove="Hbs\**\*.cs"/>
+        <Compile Remove="Jinja\**\*.cs"/>
+        <Compile Remove="Mailer\**\*.cs"/>
+        <Compile Remove="Report\**\*.cs"/>
+        <Compile Remove="Site\**\*.cs"/>
+        <Compile Remove="DataConvert.cs"/>
+        <Compile Remove="MarkdownRenderer.cs"/>
+        <Compile Remove="Common\FrontMatterParser.cs"/>
+    </ItemGroup>
+</Project>

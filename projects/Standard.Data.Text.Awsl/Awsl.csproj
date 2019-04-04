@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <RootNamespace>Std.Data.Text.Awsl</RootNamespace>
+        <AssemblyName>Sonic.Standard.Data.Text.Awsl</AssemblyName>
+        <PackageId>Sonic.Standard.Data.Text.Awsl</PackageId>
+        <Authors>Nyar Team - Oak Group</Authors>
+        <Description>AWSL 模板语言解析器</Description>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Sonic.Standard.Data.Text\Sonic.Standard.Data.Text.csproj"/>
+        <ProjectReference Include="..\Nyar\Nyar.csproj"/>
+        <ProjectReference Include="..\Nyar.Language.Css\Css.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="Std.Data.Text.Syntax"/>
+        <Using Include="Std.Data.Text.Parsing"/>
+        <Using Include="Std.Data.Text.Lexing"/>
+        <Using Include="Std.Data.Text.Diagnostics"/>
+    </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Semantic\AwslTypeCheckerImpl.cs"/>
+    <Compile Remove="Semantic\AwslSemanticBridge.cs"/>
+    </ItemGroup>
+</Project>

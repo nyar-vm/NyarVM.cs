@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>false</ImplicitUsings>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <PackageId>Sonic.Database</PackageId>
+        <RootNamespace>Athena</RootNamespace>
+        <AssemblyName>Athena</AssemblyName>
+        <Description>Olympus Athena — 高性能单机多模嵌入式数据库。列式微分区存储、向量/图/倒排多模索引、向量化 SQL 查询引擎、UDF 驱动缓存。</Description>
+        <Authors>Olympus Team</Authors>
+        <Company>Olympus</Company>
+        <Product>Olympus.Athena</Product>
+        <PackageTags>olympus;athena;database;columnar;vector;graph;inverted-index;sql;embedded</PackageTags>
+        <IsPackable>true</IsPackable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageOutputPath>..\..\packages</PackageOutputPath>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Sonic.Standard\Sonic.Standard.csproj"/>
+        <ProjectReference Include="..\Sonic.Core\Sonic.Core.csproj"/>
+        <ProjectReference Include="..\Nyar\Nyar.csproj"/>
+        <ProjectReference Include="..\Sonic.Standard.Data.Text\Sonic.Standard.Data.Text.csproj"/>
+    </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="QueryHashJoinOperator.cs"/>
+    <Compile Remove="QuerySqlIntentBuilder.cs"/>
+  
+        <Compile Remove="Query\HashJoinOperator.cs"/>
+        <Compile Remove="Query\SqlIntentBuilder.cs"/>
+    
+        <Compile Remove="Query\TopKOperator.cs"/>
+        <Compile Remove="AthenaEngine.cs"/>
+        <Compile Remove="Query\QueryEngine.cs"/>
+    </ItemGroup>
+</Project>

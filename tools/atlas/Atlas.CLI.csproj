@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <RootNamespace>Atlas.CLI</RootNamespace>
+        <AssemblyName>atlas</AssemblyName>
+        <Version>0.3.0</Version>
+        <Authors>NyarVM</Authors>
+        <Description>Atlas CLI - 后端基础设施管理工具（全自研协议库）</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackAsTool>true</PackAsTool>
+        <ToolCommandName>atlas</ToolCommandName>
+        <PackageOutputPath>./nupkg</PackageOutputPath>
+        <PackageTags>atlas;cli;backend;infrastructure;deployment;acorn</PackageTags>
+            <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\projects\Sonic.Standard.Schema\Sonic.Standard.Schema.csproj" />
+        <ProjectReference Include="..\..\projects\Nyar\Nyar.csproj"/>
+        <ProjectReference Include="..\..\projects\Sonic.Standard.Command\Sonic.Standard.Command.csproj"/>
+    </ItemGroup>
+</Project>

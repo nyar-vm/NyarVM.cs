@@ -1,0 +1,321 @@
+using System.Collections.Immutable;
+using System.Text;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
+
+namespace Sonic.Data.Generator;
+
+/// <summary>
+///     为包含 <c>[EventHandler]</c> 或 <c>[MessageHandler]</c> 方法的类自动生成
+///     <c>IEventHandler&lt;T&gt;</c> 实现和事件订阅代码。
+/// </summary>
+[Generator]
+public sealed class MessageBusGenerator : IIncrementalGenerator
+{
+    private const string _event_handler_attribute_full_name = "Sonic.Standard.Flow.Message.EventHandlerAttribute";
+    private const string _message_handler_attribute_full_name = "Sonic.Standard.Flow.Message.MessageHandlerAttribute";
+
+    /// <summary>
+    ///     初始化增量源代码生成管道。
+    /// </summary>
+    /// <param name="context">增量生成器初始化上下文。</param>
+    public void Initialize(IncrementalGeneratorInitializationContext context)
+    {
+        var eventTargets = context.SyntaxProvider
+            .ForAttributeWithMetadataName(
+                _event_handler_attribute_full_name,
+                static (node, _) => node is MethodDeclarationSyntax,
+                static (ctx, ct) => transform_handler(ctx, HandlerKind.event_handler, ct))
+            .Where(static info => info is not null)
+            .Select(static (info, _) => info!.Value);
+
+        var messageTargets = context.SyntaxProvider
+            .ForAttributeWithMetadataName(
+                _message_handler_attribute_full_name,
+                static (node, _) => node is MethodDeclarationSyntax,
+                static (ctx, ct) => transform_handler(ctx, HandlerKind.message_handler, ct))
+            .Where(static info => info is not null)
+            .Select(static (info, _) => info!.Value);
+
+        var allHandlers = eventTargets.Collect().Combine(messageTargets.Collect());
+
+        context.RegisterSourceOutput(allHandlers, generate_source);
+    }
+
+    /// <summary>
+    ///     提取处理器方法信息。
+    /// </summary>
+    private static HandlerMethodInfo? transform_handler(GeneratorAttributeSyntaxContext context, HandlerKind kind,
+        CancellationToken ct)
+    {
+        var methodSymbol = (IMethodSymbol)context.TargetSymbol;
+        var typeSymbol = methodSymbol.ContainingType;
+
+        if (typeSymbol is null) return null;
+
+        if (methodSymbol.Parameters.Length == 0) return null;
+
+        var eventType = methodSymbol.Parameters[0].Type;
+        var eventTypeFullName = eventType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+
+        string? topic = null;
+
+        if (kind == HandlerKind.message_handler)
+        {
+            var msgAttr = context.Attributes.FirstOrDefault(a =>
+                a.AttributeClass?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) ==
+                $"global::{_message_handler_attribute_full_name}");
+
+            if (msgAttr is not null)
+                foreach (var named in msgAttr.NamedArguments)
+                    if (named is { Key: "topic", Value.Value: string t })
+                        topic = t;
+        }
+
+        return new HandlerMethodInfo(
+            typeSymbol.Name,
+            typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+            typeSymbol.ContainingNamespace?.ToDisplayString(),
+            methodSymbol.Name,
+            eventTypeFullName,
+            kind,
+            topic,
+            methodSymbol.ReturnType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+    }
+
+    /// <summary>
+    ///     生成所有处理器类型的源代码。
+    /// </summary>
+    private static void generate_source(SourceProductionContext context,
+        (ImmutableArray<HandlerMethodInfo> eventHandlers, ImmutableArray<HandlerMethodInfo> messageHandlers)
+            allHandlers)
+    {
+        var grouped = new Dictionary<string, List<HandlerMethodInfo>>();
+
+        foreach (var handler in allHandlers.eventHandlers) add_handler(grouped, handler);
+
+        foreach (var handler in allHandlers.messageHandlers) add_handler(grouped, handler);
+
+        foreach (var __kvp in grouped)
+        {
+            var handlers = __kvp.Value;
+            var first = handlers[0];
+            var sourceText = generate_handler_source(first, handlers);
+            var hintName = $"{first.type_name}.MessageBus.g.cs";
+            context.AddSource(hintName, SourceText.From(sourceText, Encoding.UTF8));
+        }
+    }
+
+    /// <summary>
+    ///     将处理器信息添加到按类型分组的字典中。
+    /// </summary>
+    private static void add_handler(Dictionary<string, List<HandlerMethodInfo>> grouped, HandlerMethodInfo handler)
+    {
+        if (!grouped.TryGetValue(handler.fully_qualified_name, out var list))
+        {
+            list = [];
+            grouped[handler.fully_qualified_name] = list;
+        }
+
+        list.Add(handler);
+    }
+
+    /// <summary>
+    ///     生成单个类型的消息总线源代码。
+    /// </summary>
+    private static string generate_handler_source(HandlerMethodInfo first, List<HandlerMethodInfo> handlers)
+    {
+        var sb = new SourceTextBuilder();
+        sb.append_line("// <auto-generated />");
+        sb.append_line("#nullable enable");
+        sb.append_line();
+        sb.append_line("using System;");
+        sb.append_line("using System.Threading.Tasks;");
+        sb.append_line();
+
+        if (!string.IsNullOrEmpty(first.namespace_name))
+        {
+            sb.append_line($"namespace {first.namespace_name};");
+            sb.append_line();
+        }
+
+        var eventHandlers = handlers.Where(h => h.kind == HandlerKind.event_handler).ToList();
+        var messageHandlers = handlers.Where(h => h.kind == HandlerKind.message_handler).ToList();
+
+        var interfaces = new List<string>();
+
+        var eventTypes = eventHandlers.Select(h => h.event_type_full_name).Distinct().ToList();
+        foreach (var eventType in eventTypes)
+            interfaces.Add($"global::Sonic.Standard.Flow.Message.IMessageHandler<{eventType}>");
+
+        sb.append_line("/// <summary>");
+        sb.append_line($"/// <c>{first.type_name}</c> 的事件/消息处理器实现。");
+        sb.append_line("/// </summary>");
+
+        var baseList = interfaces.Count > 0 ? " : " + string.Join(", ", interfaces) : "";
+        sb.append_line($"public partial class {first.type_name}{baseList}");
+        using (sb.block())
+        {
+            generate_subscribe_method(sb, first, eventHandlers);
+            sb.append_line();
+            generate_handle_methods(sb, eventHandlers, messageHandlers);
+        }
+
+        return sb.ToString();
+    }
+
+    /// <summary>
+    ///     生成 <c>subscribe_to</c> 方法，将所有事件处理器注册到事件总线。
+    /// </summary>
+    private static void generate_subscribe_method(SourceTextBuilder sb, HandlerMethodInfo first,
+        List<HandlerMethodInfo> eventHandlers)
+    {
+        sb.append_line("/// <summary>");
+        sb.append_line("/// 将所有事件处理器订阅到指定的事件总线。");
+        sb.append_line("/// </summary>");
+        sb.append_line("/// <param name=\"bus\">事件总线实例。</param>");
+        sb.append_line("/// <returns>可释放的订阅句柄列表。</returns>");
+        sb.append_line(
+            "public global::System.Collections.Generic.List<IDisposable> subscribe_to(global::Sonic.Standard.Flow.Message.IEventBus bus)");
+        using (sb.block())
+        {
+            sb.append_line("var __subscriptions = new global::System.Collections.Generic.List<IDisposable>();");
+            sb.append_line();
+
+            foreach (var handler in eventHandlers)
+                sb.append_line(
+                    $"__subscriptions.Add(bus.subscribe<{handler.event_type_full_name}>(async __e => await {handler.method_name}(__e)));");
+
+            sb.append_line();
+            sb.append_line("return __subscriptions;");
+        }
+    }
+
+    /// <summary>
+    ///     生成 <c>handle</c> 接口实现方法。
+    /// </summary>
+    private static void generate_handle_methods(SourceTextBuilder sb, List<HandlerMethodInfo> eventHandlers,
+        List<HandlerMethodInfo> messageHandlers)
+    {
+        var allHandlers = eventHandlers.Concat(messageHandlers).ToList();
+        var groupedByEventType = allHandlers.GroupBy(h => h.event_type_full_name).ToList();
+
+        foreach (var group in groupedByEventType)
+        {
+            var eventType = group.Key;
+            var handlerList = group.ToList();
+
+            sb.append_line("/// <summary>");
+            sb.append_line($"/// 处理 <c>{eventType}</c> 类型的消息。");
+            sb.append_line("/// </summary>");
+            sb.append_line("/// <param name=\"message\">消息实例。</param>");
+            sb.append_line(
+                $"global::System.Threading.Tasks.Task global::Sonic.Standard.Flow.Message.IMessageHandler<{eventType}>.handle({eventType} message)");
+            using (sb.block())
+            {
+                foreach (var handler in handlerList)
+                {
+                    var isAsync = handler.return_type.Contains("Task");
+                    if (isAsync)
+                        sb.append_line($"await {handler.method_name}(message);");
+                    else
+                        sb.append_line($"{handler.method_name}(message);");
+                }
+
+                sb.append_line("return global::System.Threading.Tasks.Task.CompletedTask;");
+            }
+
+            sb.append_line();
+        }
+    }
+
+    #region 数据模型
+
+    /// <summary>
+    ///     处理器方法信息。
+    /// </summary>
+    internal readonly struct HandlerMethodInfo
+    {
+        /// <summary>
+        ///     类型名称。
+        /// </summary>
+        public readonly string type_name;
+
+        /// <summary>
+        ///     完全限定类型名称。
+        /// </summary>
+        public readonly string fully_qualified_name;
+
+        /// <summary>
+        ///     命名空间名称。
+        /// </summary>
+        public readonly string? namespace_name;
+
+        /// <summary>
+        ///     处理器方法名称。
+        /// </summary>
+        public readonly string method_name;
+
+        /// <summary>
+        ///     事件类型的完全限定名称。
+        /// </summary>
+        public readonly string event_type_full_name;
+
+        /// <summary>
+        ///     处理器种类。
+        /// </summary>
+        public readonly HandlerKind kind;
+
+        /// <summary>
+        ///     消息主题。
+        /// </summary>
+        public readonly string? topic;
+
+        /// <summary>
+        ///     返回类型的完全限定名称。
+        /// </summary>
+        public readonly string return_type;
+
+        /// <summary>
+        ///     初始化 <see cref="HandlerMethodInfo" /> 的新实例。
+        /// </summary>
+        public HandlerMethodInfo(
+            string typeName,
+            string fullyQualifiedName,
+            string? namespaceName,
+            string methodName,
+            string eventTypeFullName,
+            HandlerKind kind,
+            string? topic,
+            string returnType)
+        {
+            type_name = typeName;
+            fully_qualified_name = fullyQualifiedName;
+            namespace_name = namespaceName;
+            method_name = methodName;
+            event_type_full_name = eventTypeFullName;
+            this.kind = kind;
+            this.topic = topic;
+            return_type = returnType;
+        }
+    }
+
+    /// <summary>
+    ///     处理器种类。
+    /// </summary>
+    internal enum HandlerKind
+    {
+        /// <summary>
+        ///     事件处理器。
+        /// </summary>
+        event_handler,
+
+        /// <summary>
+        ///     消息处理器。
+        /// </summary>
+        message_handler
+    }
+
+    #endregion
+}
